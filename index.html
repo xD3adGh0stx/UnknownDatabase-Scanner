@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UnknownDatabase Scanner</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0f1117;
+    --panel:    #1a1d27;
+    --border:   #2a2d3e;
+    --accent:   #4f8ef7;
+    --accent2:  #6c63ff;
+    --text:     #e8eaf6;
+    --sub:      #8c8fa8;
+    --green:    #4caf7d;
+    --red:      #f25f5c;
+    --orange:   #f7a44f;
+    --row-hover:#21253a;
+    --shadow:   0 4px 24px rgba(0,0,0,.5);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ────────────────────────────────────────────── */
+  header {
+    background: linear-gradient(135deg, #1a1d27 0%, #12152080 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #stats-badge {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--sub);
+    background: var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ── Search area ────────────────────────────────────────── */
+  .search-wrap {
+    padding: 24px 32px 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #search-input {
+    flex: 1;
+    min-width: 260px;
+    padding: 12px 18px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  #search-input:focus { border-color: var(--accent); }
+  #search-input::placeholder { color: var(--sub); }
+
+  #field-select {
+    padding: 12px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+  }
+  #field-select:focus { border-color: var(--accent); }
+
+  #search-btn {
+    padding: 12px 26px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+  }
+  #search-btn:hover  { background: #3a78e0; }
+  #search-btn:active { transform: scale(.97); }
+
+  #clear-btn {
+    padding: 12px 16px;
+    background: var(--panel);
+    color: var(--sub);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color .2s;
+  }
+  #clear-btn:hover { color: var(--text); }
+
+  /* ── Results info bar ────────────────────────────────────── */
+  .results-bar {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 8px 32px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-height: 36px;
+  }
+  #result-info { color: var(--sub); font-size: 13px; }
+  #export-btn {
+    margin-left: auto;
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background .2s;
+    display: none;
+  }
+  #export-btn:hover { background: rgba(79,142,247,.1); }
+
+  /* ── Table ───────────────────────────────────────────────── */
+  .table-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 32px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  thead th {
+    background: #21253a;
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody td {
+    padding: 10px 14px;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  td.td-name { font-weight: 500; color: #c5caf5; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-active   { background: rgba(76,175,125,.15); color: var(--green); }
+  .badge-inactive { background: rgba(242,95,92,.12);  color: var(--red);   }
+  .badge-other    { background: rgba(140,143,168,.12); color: var(--sub);  }
+
+  /* ── Pagination ──────────────────────────────────────────── */
+  #pagination {
+    max-width: 1400px;
+    margin: 16px auto 0;
+    padding: 0 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .page-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background .15s, border-color .15s;
+  }
+  .page-btn:hover         { background: var(--row-hover); border-color: var(--accent); }
+  .page-btn.active        { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .page-btn:disabled      { opacity: .3; cursor: default; }
+  #page-info { color: var(--sub); font-size: 13px; margin-left: 4px; }
+
+  /* ── States ──────────────────────────────────────────────── */
+  #empty-state {
+    text-align: center;
+    padding: 80px 32px;
+    color: var(--sub);
+    display: none;
+  }
+  #empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+  #empty-state h2    { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+
+  #loader {
+    text-align: center;
+    padding: 60px;
+    color: var(--sub);
+    display: none;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Modal ───────────────────────────────────────────────── */
+  #modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+  #modal-overlay.open { display: flex; }
+
+  #modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 92vw;
+    max-width: 860px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    animation: slideUp .2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } }
+
+  #modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #modal-title { font-size: 17px; font-weight: 600; flex: 1; }
+  #modal-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--border);
+    color: var(--sub);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  #modal-close:hover { background: var(--red); color: #fff; }
+
+  #modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+  }
+  .field-item {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    overflow: hidden;
+  }
+  .field-label {
+    font-size: 10px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .field-value {
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .field-value.empty { color: var(--sub); font-style: italic; }
+
+  .section-title {
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin: 18px 0 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    grid-column: 1 / -1;
+  }
+
+  /* ── Welcome screen ──────────────────────────────────────── */
+  #welcome {
+    max-width: 600px;
+    margin: 60px auto;
+    text-align: center;
+    padding: 0 32px;
+  }
+  #welcome .logo { font-size: 56px; margin-bottom: 20px; }
+  #welcome h2 { font-size: 22px; margin-bottom: 10px; }
+  #welcome p  { color: var(--sub); line-height: 1.6; }
+  .search-tips {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    text-align: left;
+  }
+  .tip {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .tip .tip-icon  { font-size: 20px; margin-bottom: 6px; }
+  .tip .tip-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .tip .tip-text  { font-size: 12px; color: var(--sub); }
+
+  /* ── Log timeline ────────────────────────────────────────── */
+  .log-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .log-entry {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  .log-entry.log-warn {
+    background: rgba(242,95,92,.07);
+    border-color: rgba(242,95,92,.35);
+  }
+  .log-entry.log-sms {
+    background: rgba(79,142,247,.06);
+    border-color: rgba(79,142,247,.3);
+  }
+  .log-meta {
+    font-size: 11px;
+    color: var(--sub);
+    margin-bottom: 3px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .log-dir {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .log-dir-in  { background: rgba(76,175,125,.15); color: var(--green); }
+  .log-dir-out { background: rgba(79,142,247,.15);  color: var(--accent); }
+  .log-dir-sys { background: rgba(140,143,168,.12); color: var(--sub); }
+  .log-warn-tag {
+    color: var(--red);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .log-text {
+    color: var(--text);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ── Warning badge in table ───────────────────────────────── */
+  .badge-warn {
+    background: rgba(242,95,92,.12);
+    color: var(--red);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .badge-note {
+    background: rgba(247,164,79,.12);
+    color: var(--orange);
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── Database filter chips ───────────────────────────────── */
+  #db-filter {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    display: none; /* shown only when >1 database */
+  }
+  #db-filter .filter-label {
+    font-size: 11px;
+    color: var(--sub);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-right: 2px;
+  }
+  .db-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: opacity .15s, transform .1s;
+    user-select: none;
+  }
+  .db-chip.off { opacity: .35; }
+  .db-chip:hover { transform: scale(1.04); }
+
+  /* ── Database badge in table ─────────────────────────────── */
+  .badge-db {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+    opacity: .9;
+  }
+
+  /* ── Database management modal ───────────────────────────── */
+  #db-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    backdrop-filter: blur(4px);
+  }
+  #db-modal-overlay.open { display: flex; }
+  #db-modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 92vw;
+    max-width: 560px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    animation: slideUp .2s ease;
+  }
+  #db-modal-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #db-modal-title { font-size: 16px; font-weight: 600; flex: 1; }
+  #db-modal-close {
+    width: 30px; height: 30px;
+    border-radius: 50%; border: none;
+    background: var(--border); color: var(--sub);
+    font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  #db-modal-close:hover { background: var(--red); color: #fff; }
+  #db-modal-body {
+    flex: 1; overflow-y: auto;
+    padding: 16px 22px 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .db-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,.02);
+  }
+  .db-row-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .db-row-info { flex: 1; min-width: 0; }
+  .db-row-name {
+    font-size: 13px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .db-row-meta { font-size: 11px; color: var(--sub); margin-top: 2px; }
+  .db-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .db-btn {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    transition: background .15s;
+  }
+  .db-btn:hover { background: var(--row-hover); }
+  .db-btn.danger { color: var(--red); border-color: rgba(242,95,92,.3); }
+  .db-btn.danger:hover { background: rgba(242,95,92,.1); }
+  .db-add-note {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(79,142,247,.06);
+    border: 1px solid rgba(79,142,247,.2);
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--sub);
+    line-height: 1.6;
+  }
+
+  /* ── Manage button in header ──────────────────────────────── */
+  #manage-db-btn {
+    padding: 6px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--sub);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s;
+    margin-left: 8px;
+  }
+  #manage-db-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 700px) {
+    header, .search-wrap, .results-bar, .table-wrap, #pagination { padding-left: 16px; padding-right: 16px; }
+    #db-filter { padding-left: 16px; padding-right: 16px; }
+    .search-tips { grid-template-columns: 1fr; }
+    #modal { width: 98vw; border-radius: 12px; }
+    #db-modal { width: 98vw; border-radius: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────────────────── -->
+<header>
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <h1>UnknownDatabase Scanner</h1>
+    <span style="font-size:11px;color:var(--sub)">Lokale database zoeker</span>
+  </div>
+  <span id="stats-badge">Laden...</span>
+  <button id="manage-db-btn" title="Databases beheren">&#9776; Databases</button>
+</header>
+
+<!-- ── Search ─────────────────────────────────────────────────────────── -->
+<div class="search-wrap">
+  <div class="search-row">
+    <input id="search-input" type="text" placeholder="Zoek op naam, adres, telefoon, e-mail, IBAN..." autocomplete="off" spellcheck="false">
+    <select id="field-select">
+      <option value="all">Alle velden</option>
+      <option value="name">Naam</option>
+      <option value="phone">Telefoon</option>
+      <option value="email">E-mail</option>
+      <option value="iban">IBAN</option>
+      <option value="city">Stad</option>
+      <option value="postal">Postcode</option>
+      <option value="street">Straat</option>
+      <option value="id">Klant ID</option>
+      <option value="notes">Notities / Log</option>
+    </select>
+    <button id="search-btn">Zoeken</button>
+    <button id="clear-btn">Wissen</button>
+  </div>
+</div>
+
+<!-- ── Database filter ────────────────────────────────────────────────── -->
+<div id="db-filter">
+  <span class="filter-label">Database:</span>
+</div>
+
+<!-- ── Results bar ─────────────────────────────────────────────────────── -->
+<div class="results-bar">
+  <span id="result-info"></span>
+  <button id="export-btn">Exporteer CSV</button>
+</div>
+
+<!-- ── Table / States ──────────────────────────────────────────────────── -->
+<div class="table-wrap">
+
+  <div id="loader">
+    <div class="spinner"></div>
+    Zoeken...
+  </div>
+
+  <div id="empty-state">
+    <div class="icon">🔍</div>
+    <h2 id="empty-title">No results found</h2>
+    <p id="empty-sub">Try a different search term or field.</p>
+  </div>
+
+  <div id="welcome">
+    <div class="logo">🗄️</div>
+    <h2>Welkom bij UnknownDatabase Scanner</h2>
+    <p>Typ een zoekterm om personen op te zoeken. Je kunt zoeken op naam, telefoon, e-mail, IBAN, postcode, straat of klant-ID.</p>
+    <div class="search-tips">
+      <div class="tip">
+        <div class="tip-icon">👤</div>
+        <div class="tip-title">Op naam</div>
+        <div class="tip-text">Kies "Naam" en typ een voor- of achternaam</div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">📞</div>
+        <div class="tip-title">Op telefoon</div>
+        <div class="tip-text">Kies "Telefoon" en typ een (deel van een) nummer</div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">🏦</div>
+        <div class="tip-title">Op IBAN</div>
+        <div class="tip-text">Kies "IBAN" en typ een rekeningnummer, bijv. "NL77RABO"</div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">📧</div>
+        <div class="tip-title">Op e-mail</div>
+        <div class="tip-text">Kies "E-mail" en typ een deel van het e-mailadres</div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">🏠</div>
+        <div class="tip-title">Op postcode</div>
+        <div class="tip-text">Kies "Postcode" en typ bijv. "1504" of "1504 HN"</div>
+      </div>
+      <div class="tip">
+        <div class="tip-icon">🔍</div>
+        <div class="tip-title">Alle velden</div>
+        <div class="tip-text">Laat "Alle velden" staan voor een brede zoekopdracht</div>
+      </div>
+    </div>
+  </div>
+
+  <table id="results-table" style="display:none">
+    <thead>
+      <tr>
+        <th>Naam</th>
+        <th>Straat + Nr.</th>
+        <th>Postcode</th>
+        <th>Stad</th>
+        <th>Telefoon</th>
+        <th>E-mail</th>
+        <th>IBAN</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- ── Pagination ──────────────────────────────────────────────────────── -->
+<div id="pagination"></div>
+
+<!-- ── Detail Modal ────────────────────────────────────────────────────── -->
+<div id="modal-overlay">
+  <div id="modal">
+    <div id="modal-header">
+      <span id="modal-title">Record Details</span>
+      <button id="modal-close" title="Close">✕</button>
+    </div>
+    <div id="modal-body">
+      <div class="field-grid" id="modal-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Database Management Modal ──────────────────────────────────────── -->
+<div id="db-modal-overlay">
+  <div id="db-modal">
+    <div id="db-modal-header">
+      <span id="db-modal-title">Databases beheren</span>
+      <button id="db-modal-close" title="Sluiten">&#x2715;</button>
+    </div>
+    <div id="db-modal-body">
+      <div id="db-list">Laden...</div>
+      <div class="db-add-note">
+        <strong style="color:var(--accent)">Database toevoegen?</strong><br>
+        Sleep een nieuw .txt bestand op <strong>import.bat</strong> en geef het een naam.
+        Het wordt automatisch toegevoegd aan de lijst.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let currentPage  = 1;
+let currentQ     = '';
+let currentField = 'all';
+let totalPages   = 0;
+let lastResults  = [];
+let debounceTimer;
+
+// ── Database colors & filter ────────────────────────────────────────────────
+const DB_PALETTE = ['#4f8ef7','#6c63ff','#4caf7d','#f7a44f','#f25f5c',
+                    '#00d4aa','#e879f9','#fb923c','#38bdf8','#a3e635'];
+let allDatabases  = [];  // [{name, records, sizeMB, ...}]
+let activeDbNames = new Set(); // which DBs are currently enabled in filter
+
+function dbColor(name) {
+  const idx = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % DB_PALETTE.length;
+  return DB_PALETTE[idx];
+}
+
+function dbBadgeHtml(dbName) {
+  if (!dbName) return '';
+  const col = dbColor(dbName);
+  return `<span class="badge-db" style="background:${col}22;color:${col};border:1px solid ${col}44">${esc(dbName)}</span>`;
+}
+
+// Keywords die een waarschuwing triggeren in de log
+const WARN_KEYWORDS = [
+  'agressief','agressieve','agressiviteit',
+  'dreigt','bedreiging','bedreigt','wapens',
+  'geweld','mishandeling','geslagen',
+  'onbeschoft','schelden','scheld','kanker',
+  'sta deze klant niet te woord',
+  'laat op! niet helpen','let op','niet helpen',
+  'bewind','schuldsanering','schuldhulp','schuldhulpverlener',
+  'bewindvoerder','bewindvoering','schuldhulpverlening',
+  'politie','aangifte','beveiliger',
+  'klant is agressief',
+  'overlijden','overleden','gestorven','nabestaande','nabestaanden',
+];
+
+function hasWarning(name, log) {
+  if (!log && !name) return false;
+  const hay = ((name || '') + ' ' + (log || '')).toLowerCase();
+  return WARN_KEYWORDS.some(kw => hay.includes(kw));
+}
+
+// ── DOM refs ───────────────────────────────────────────────────────────────
+const inp      = document.getElementById('search-input');
+const sel      = document.getElementById('field-select');
+const btn      = document.getElementById('search-btn');
+const clrBtn   = document.getElementById('clear-btn');
+const expBtn   = document.getElementById('export-btn');
+const tbody    = document.getElementById('tbody');
+const table    = document.getElementById('results-table');
+const loader   = document.getElementById('loader');
+const empty    = document.getElementById('empty-state');
+const welcome  = document.getElementById('welcome');
+const pager    = document.getElementById('pagination');
+const resInfo  = document.getElementById('result-info');
+const overlay  = document.getElementById('modal-overlay');
+const modalTitle = document.getElementById('modal-title');
+const modalGrid  = document.getElementById('modal-grid');
+const modalClose = document.getElementById('modal-close');
+const statsBadge   = document.getElementById('stats-badge');
+const dbFilter     = document.getElementById('db-filter');
+const manageDbBtn  = document.getElementById('manage-db-btn');
+const dbModalOverlay = document.getElementById('db-modal-overlay');
+const dbModalClose   = document.getElementById('db-modal-close');
+const dbList         = document.getElementById('db-list');
+
+// ── Load databases & stats ──────────────────────────────────────────────────
+function loadDatabases() {
+  return fetch('/api/databases').then(r => r.json()).then(dbs => {
+    allDatabases = dbs;
+    // Keep existing active set, or enable all by default
+    if (activeDbNames.size === 0) {
+      dbs.forEach(d => activeDbNames.add(d.name));
+    }
+    renderDbFilter(dbs);
+    renderDbList(dbs);
+  }).catch(() => {});
+}
+
+function renderDbFilter(dbs) {
+  // Only show filter when there is more than 1 database
+  if (dbs.length <= 1) {
+    dbFilter.style.display = 'none';
+    return;
+  }
+  dbFilter.style.display = 'flex';
+  // Keep the label, rebuild chips
+  const label = dbFilter.querySelector('.filter-label');
+  dbFilter.innerHTML = '';
+  dbFilter.appendChild(label);
+  dbs.forEach(db => {
+    const col  = dbColor(db.name);
+    const chip = document.createElement('span');
+    chip.className   = 'db-chip' + (activeDbNames.has(db.name) ? '' : ' off');
+    chip.textContent = db.name;
+    chip.style.cssText = `background:${col}22;color:${col};border-color:${col}55`;
+    chip.title = `${(db.records||0).toLocaleString('nl-NL')} records`;
+    chip.addEventListener('click', () => {
+      if (activeDbNames.has(db.name)) {
+        if (activeDbNames.size > 1) activeDbNames.delete(db.name);
+      } else {
+        activeDbNames.add(db.name);
+      }
+      chip.classList.toggle('off', !activeDbNames.has(db.name));
+      if (currentQ) doSearch(1);
+    });
+    dbFilter.appendChild(chip);
+  });
+}
+
+fetch('/api/stats').then(r => r.json()).then(d => {
+  let badge = `${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
+  if (d.databases && d.databases.length > 1) {
+    badge = `${d.databases.length} databases · ${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
+  }
+  statsBadge.textContent = badge;
+}).catch(() => { statsBadge.textContent = 'Database geladen'; });
+
+loadDatabases();
+
+// ── Search ─────────────────────────────────────────────────────────────────
+function doSearch(page = 1) {
+  const q = inp.value.trim();
+  if (!q) { showWelcome(); return; }
+
+  currentQ     = q;
+  currentField = sel.value;
+  currentPage  = page;
+
+  showLoader();
+
+  const dbsParam = [...activeDbNames].join(',');
+  const params = new URLSearchParams({ q, field: currentField, page, dbs: dbsParam });
+  fetch('/api/search?' + params)
+    .then(r => r.json())
+    .then(renderResults)
+    .catch(err => showError(err.message));
+}
+
+function renderResults(data) {
+  hideAll();
+  lastResults = data.results || [];
+  totalPages  = data.pages  || 0;
+
+  if (!lastResults.length) {
+    empty.style.display = 'block';
+    document.getElementById('empty-title').textContent = 'Geen resultaten gevonden';
+    document.getElementById('empty-sub').textContent =
+      `Niets gevonden voor "${currentQ}". Probeer een andere zoekterm.`;
+    resInfo.textContent  = '';
+    expBtn.style.display = 'none';
+    return;
+  }
+
+  resInfo.textContent  = `${data.total.toLocaleString('nl-NL')} resultaten gevonden (pagina ${data.page} van ${totalPages})`;
+  expBtn.style.display = 'inline-block';
+
+  tbody.innerHTML = '';
+  for (const r of lastResults) {
+    const tr = document.createElement('tr');
+    tr.dataset.id = r.id;
+    const warnBadge = hasWarning(r.name, '') ?
+      '<span class="badge-warn">⚠ Let op</span>' : '';
+    const dbBadge = allDatabases.length > 1 ? dbBadgeHtml(r._db) : '';
+    tr.innerHTML = `
+      <td class="td-name">${esc(r.name)}${warnBadge}${dbBadge}</td>
+      <td>${esc(r.street) || '<span style="color:var(--sub)">—</span>'}</td>
+      <td>${esc(r.postal) || '<span style="color:var(--sub)">—</span>'}</td>
+      <td>${esc(r.city)   || '<span style="color:var(--sub)">—</span>'}</td>
+      <td>${esc(r.phone)  || '<span style="color:var(--sub)">—</span>'}</td>
+      <td style="max-width:180px">${esc(r.email)  || '<span style="color:var(--sub)">—</span>'}</td>
+      <td style="font-family:monospace;font-size:12px">${esc(r.iban)   || '<span style="color:var(--sub)">—</span>'}</td>
+      <td>${statusBadge(r.status)}</td>
+    `;
+    tr.addEventListener('click', () => openRecord(r.id, r.name, r._db));
+    tbody.appendChild(tr);
+  }
+
+  table.style.display = 'table';
+  renderPager(data.page, totalPages);
+}
+
+// ── Status badge ───────────────────────────────────────────────────────────
+function statusBadge(s) {
+  if (!s) return '';
+  const cls = s.toLowerCase() === 'active'   ? 'badge-active'
+            : s.toLowerCase() === 'inactive' ? 'badge-inactive'
+            : 'badge-other';
+  return `<span class="badge ${cls}">${esc(s)}</span>`;
+}
+
+// ── Pagination ─────────────────────────────────────────────────────────────
+function renderPager(page, pages) {
+  pager.innerHTML = '';
+  if (pages <= 1) return;
+
+  const add = (label, p, disabled, active) => {
+    const b = document.createElement('button');
+    b.className = 'page-btn' + (active ? ' active' : '');
+    b.textContent = label;
+    b.disabled = disabled;
+    if (!disabled && !active) b.addEventListener('click', () => doSearch(p));
+    pager.appendChild(b);
+  };
+
+  add('← Prev', page - 1, page <= 1);
+
+  let start = Math.max(1, page - 2);
+  let end   = Math.min(pages, page + 2);
+  if (page <= 3)          end   = Math.min(pages, 5);
+  if (page >= pages - 2)  start = Math.max(1, pages - 4);
+
+  if (start > 1) { add('1', 1, false); if (start > 2) add('…', null, true); }
+  for (let i = start; i <= end; i++) add(i, i, false, i === page);
+  if (end < pages) { if (end < pages - 1) add('…', null, true); add(pages, pages, false); }
+
+  add('Next →', page + 1, page >= pages);
+
+  const info = document.createElement('span');
+  info.id = 'page-info';
+  info.textContent = `Page ${page} of ${pages}`;
+  pager.appendChild(info);
+}
+
+// ── Record detail ──────────────────────────────────────────────────────────
+function openRecord(id, name, dbName) {
+  const dbTag = (allDatabases.length > 1 && dbName)
+    ? ` <span style="font-size:12px;font-weight:400;color:${dbColor(dbName)}">[${dbName}]</span>`
+    : '';
+  modalTitle.innerHTML = esc(name || 'Record Details') + dbTag;
+  modalGrid.innerHTML  = '<div style="color:var(--sub);padding:20px">Laden...</div>';
+  overlay.classList.add('open');
+
+  const params = new URLSearchParams({ id });
+  if (dbName) params.set('db', dbName);
+
+  fetch('/api/record?' + params)
+    .then(r => r.json())
+    .then(d => {
+      if (d.error) { modalGrid.innerHTML = `<p style="color:var(--red)">${esc(d.error)}</p>`; return; }
+      renderModal(d.record, d.db);
+    })
+    .catch(() => { modalGrid.innerHTML = '<p style="color:var(--red)">Laden mislukt</p>'; });
+}
+
+// Always show these key fields in the summary even if empty
+const SUMMARY_FIELDS = [
+  { key: 'Flash_Message__c',                      label: 'Waarschuwing'  },
+  { key: 'Name',                                  label: 'Naam'          },
+  { key: 'Phone',                                 label: 'Telefoon'      },
+  { key: 'MobilePhone',                           label: 'Mobiel'        },
+  { key: 'vlocity_cmt__BillingEmailAddress__c',   label: 'E-mail'        },
+  { key: 'Email',                                 label: 'E-mail'        },
+  { key: 'Email__c',                              label: 'E-mail'        },
+  { key: 'PersonEmail',                           label: 'E-mail'        },
+  { key: 'Contact_Email__c',                      label: 'E-mail'        },
+  { key: 'EmailAddress__c',                       label: 'E-mail'        },
+  { key: 'Bank_Account_Number__c',                label: 'IBAN'          },
+  { key: 'Bank_Account_Holder_Name__c',           label: 'Rekeninghouder'},
+  { key: 'vlocity_cmt__Status__c',                label: 'Status'        },
+  { key: 'Segment__c',                            label: 'Segment'       },
+  { key: 'BillingStreet',                         label: 'Straat'        },
+  { key: 'House_Number__c',                       label: 'Huisnummer'    },
+  { key: 'BillingCity',                           label: 'Stad'          },
+  { key: 'BillingPostalCode',                     label: 'Postcode'      },
+  { key: 'BillingCountry',                        label: 'Land'          },
+];
+
+// Named groups – order matters; remaining non-empty fields go in "Overige velden"
+const GROUPS = [
+  { title: 'Algemeen', keys: [
+      'Id','Name','Type','IsActive','vlocity_cmt__Status__c','Segment__c',
+      'Segment_Indicator__c','Brand_Type__c','AccountSource','RecordTypeId',
+      'Customer_Type__c','Business_Type__c','Is_B2B_Account__c',
+  ]},
+  { title: 'Contact', keys: [
+      'Phone','MobilePhone','HomePhone','OtherPhone','Fax','Mobile__c',
+      'Telephone__c','PhoneNumber__c',
+      'vlocity_cmt__BillingEmailAddress__c','Email','Email__c','PersonEmail',
+      'Contact_Email__c','EmailAddress__c',
+      'Website',
+      'coosto__WhatsApp_Id__c','coosto__Facebook_Id__c','coosto__Twitter_Id__c',
+      'coosto__Instagram_Id__c','coosto__LinkedIn_Id__c','coosto__Youtube_Id__c',
+  ]},
+  { title: 'Factuuradres', keys: [
+      'BillingStreet','House_Number__c','House_Number_Extension__c',
+      'BillingCity','BillingPostalCode','BillingState','BillingCountry',
+      'Postal_Code__c','City__c','Street_Address__c',
+      'Main_Address__c','Billing_Address__c','Billing_Line_2__c',
+      'PO_Box__c','PO_Box_Number__c',
+  ]},
+  { title: 'Bezorgadres', keys: [
+      'ShippingStreet','ShippingCity','ShippingPostalCode',
+      'ShippingState','ShippingCountry',
+  ]},
+  { title: 'Identiteit & ID\'s', keys: [
+      'Id','Account_Salesforce_ID__c','AccountNumber','Siebel_Customer_ID__c',
+      'Customer_Code_Legacy_System__c','SourceSystemIdentifier',
+      'Service_Aggregator_ID__c','External_Reference_Number__c',
+      'Sugar_Contact_Id__c','JigsawCompanyId','Jigsaw',
+      'Tax_ID__c','KvK_Number__c','Chamber_Of_Commerce_Number__c',
+      'Chamber_Of_Commerce_Formula__c','CountryCode__c',
+      'vlocity_cmt__PartyId__c','vlocity_cmt__PremisesId__c',
+  ]},
+  { title: 'Financieel & Bankgegevens', keys: [
+      'Bank_Account_Number__c','Bank_Account_Holder_Name__c',
+      'Bank_Details_Check__c','Payment_Method__c','Payment_Terms__c',
+      'Bill_Day__c','Paper_Invoice__c','Paper_Invoice_Charge__c',
+      'vlocity_cmt__AccountPaymentType__c','vlocity_cmt__AutoPaymentAmount__c',
+      'vlocity_cmt__AutoPaymentCardType__c','vlocity_cmt__EnableAutopay__c',
+      'vlocity_cmt__BillCycle__c','vlocity_cmt__BillFormat__c',
+      'vlocity_cmt__BillingEmailAddress__c',
+      'vlocity_cmt__CreditRating__c','vlocity_cmt__CreditScore__c',
+      'AnnualRevenue',
+  ]},
+  { title: 'Abonnementen', keys: [
+      'Total_Subscriptions__c','NumberOfVoiceSubscription__c',
+      'Total_Data_Voice_Subscriptions__c','Financial_Subscriptions__c',
+      'Data_Subscriptions__c','Num_Active_Assets__c','Num_of_Assets_LifeCycle__c',
+      'Num_of_Non_Inactive_Assets_LifeCycle__c','Num_of_Child_Accounts__c',
+      'Num_of_Active_Child_Accounts__c','NumberOfEmployees',
+  ]},
+  { title: 'Datums', keys: [
+      'CreatedDate','LastModifiedDate','LastActivityDate','LastViewedDate',
+      'InactivationDate__c','Activation_Date__c','Contract_Sign_Date__c',
+      'Last_Opportunity_Close_Date__c','vlocity_cmt__CustomerSinceDate__c',
+      'LastNCRefreshTimestamp__c',
+  ]},
+  { title: 'Accountinstellingen', keys: [
+      'IsCustomerPortal','IsPartner','VIP_Customer__c','Sales_Channel__c',
+      'UserProfile__c','UserRole__c','OwnerId','Dealer_Code__c',
+      'Account_shielding__c','Has_Insurance__c','Chubb_insurance__c',
+      'HasSensitivityDataPermission__c','HasB2BSensitivityDataPermission__c',
+      'vlocity_cmt__HasFraud__c','Block_Status__c','Customer_Level__c',
+  ]},
+  { title: 'Activiteitenlog', keys: [
+      'SObjectLog__c',
+  ]},
+];
+
+// Extract phone from SObjectLog activity log
+function extractPhoneFromLog(log) {
+  if (!log) return '';
+  const m = log.match(/SMS\s+verstuurd[:\s]+([+\d][\d\s\-]{6,20})/i);
+  if (m) {
+    const num = m[1].replace(/\s/g, '').trim();
+    if (num.length >= 7) return num;
+  }
+  const intl = log.match(/\+31\d{9}/);
+  if (intl) return intl[0];
+  return '';
+}
+
+function renderModal(rec, sourceDb) {
+  modalGrid.innerHTML = '';
+
+  // ── Source database indicator (only when multiple databases) ──────────
+  if (allDatabases.length > 1 && sourceDb) {
+    const col  = dbColor(sourceDb);
+    const src  = document.createElement('div');
+    src.style.cssText = `grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:8px 12px;background:${col}11;border:1px solid ${col}33;border-radius:8px;margin-bottom:2px;font-size:12px`;
+    src.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0"></span><span style="color:${col};font-weight:600">Database:</span><span style="color:var(--text)">${esc(sourceDb)}</span>`;
+    modalGrid.appendChild(src);
+  }
+
+  // ── Flash_Message__c warning banner ───────────────────────────────────
+  const flashMsg = (rec['Flash_Message__c'] || '').trim();
+  if (flashMsg) {
+    const banner = document.createElement('div');
+    banner.style.cssText = 'grid-column:1/-1;background:rgba(242,95,92,.13);border:2px solid rgba(242,95,92,.55);border-radius:10px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;margin-bottom:6px';
+    const icon = document.createElement('span');
+    icon.textContent = '⚠';
+    icon.style.cssText = 'font-size:24px;color:var(--red);flex-shrink:0;line-height:1.1';
+    const body = document.createElement('div');
+    body.style.flex = '1';
+    body.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Waarschuwing</div><div style="font-size:13px;color:#f08080;line-height:1.65;white-space:pre-wrap">${esc(flashMsg)}</div>`;
+    banner.appendChild(icon);
+    banner.appendChild(body);
+    modalGrid.appendChild(banner);
+  }
+
+  // ── Summary bar: for each label show the first non-empty value found ────
+  const summaryTitle = document.createElement('div');
+  summaryTitle.className   = 'section-title';
+  summaryTitle.textContent = 'Samenvatting';
+  modalGrid.appendChild(summaryTitle);
+
+  // Build label → best value map
+  const summaryMap = new Map(); // label → display string
+  for (const { key, label } of SUMMARY_FIELDS) {
+    if (summaryMap.has(label)) continue;
+    const val = rec[key];
+    if (val !== '' && val !== null && val !== undefined) {
+      summaryMap.set(label, String(val));
+    }
+  }
+
+  // If phone not found in standard fields, try extracting from SObjectLog
+  if (!summaryMap.has('Telefoon') || summaryMap.get('Telefoon') === '—') {
+    const logPhone = extractPhoneFromLog(rec['SObjectLog__c'] || '');
+    if (logPhone) summaryMap.set('Telefoon', logPhone);
+  }
+
+  // If email not found in standard fields, scan all string fields for an @-address
+  if (!summaryMap.has('E-mail') || summaryMap.get('E-mail') === '—') {
+    const EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
+    for (const [k, v] of Object.entries(rec)) {
+      if (k === 'SObjectLog__c') continue;
+      if (typeof v === 'string' && v.includes('@') && v.length < 300 && !v.includes('http')) {
+        const m = v.match(EMAIL_RE);
+        if (m) { summaryMap.set('E-mail', m[0]); break; }
+      }
+    }
+  }
+
+  // Ensure every label appears at least once (as —)
+  for (const { label } of SUMMARY_FIELDS) {
+    if (!summaryMap.has(label)) summaryMap.set(label, '—');
+  }
+  // Deduplicate labels while preserving order
+  const seenLabels = new Set();
+  for (const { label } of SUMMARY_FIELDS) {
+    if (seenLabels.has(label)) continue;
+    seenLabels.add(label);
+    const display = summaryMap.get(label) || '—';
+    const clean   = display.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '—';
+    const item    = document.createElement('div');
+    item.className = 'field-item';
+    // Monospace styling for IBAN
+    const mono = (label === 'IBAN') ? 'font-family:monospace;font-size:13px;' : '';
+    item.innerHTML = `
+      <div class="field-label">${esc(label)}</div>
+      <div class="field-value${clean === '—' ? ' empty' : ''}" style="${mono}">${esc(clean)}</div>
+    `;
+    modalGrid.appendChild(item);
+  }
+
+  // ── Named groups ──────────────────────────────────────────────────────
+  const usedKeys = new Set(SUMMARY_FIELDS.map(f => f.key));
+
+  for (const { title, keys } of GROUPS) {
+    // Show the field if it's in the record (even with value "false")
+    const fieldKeys = keys.filter(k => rec[k] !== undefined && rec[k] !== '' && rec[k] !== null);
+    if (!fieldKeys.length) continue;
+
+    const sectionTitle = document.createElement('div');
+    sectionTitle.className   = 'section-title';
+    sectionTitle.textContent = title;
+    modalGrid.appendChild(sectionTitle);
+
+    for (const k of fieldKeys) {
+      usedKeys.add(k);
+      addFieldItem(modalGrid, k, rec[k]);
+    }
+  }
+
+  // ── All remaining fields (catch-all) ─────────────────────────────────
+  const remaining = Object.keys(rec).filter(
+    k => !usedKeys.has(k) && rec[k] !== '' && rec[k] !== null && rec[k] !== undefined
+       && k !== 'attributes_type'  // internal Salesforce metadata
+  );
+
+  if (remaining.length) {
+    const otherTitle = document.createElement('div');
+    otherTitle.className   = 'section-title';
+    otherTitle.textContent = 'Overige velden';
+    modalGrid.appendChild(otherTitle);
+    for (const k of remaining) {
+      addFieldItem(modalGrid, k, rec[k]);
+    }
+  }
+}
+
+// ── Activity log parser ────────────────────────────────────────────────────
+function parseActivityLog(text) {
+  if (!text) return [];
+  const clean = text
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
+    .trim();
+
+  const entries = [];
+  let current   = null;
+
+  for (const line of clean.split('\n')) {
+    // Match timestamp: DD-MM-YYYY HH:MM:SS - rest
+    const m = line.match(/^(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2})\s*-\s*(.*)/);
+    if (m) {
+      if (current) entries.push(current);
+      const parts = m[2].split(/\s+-\s+/);
+      let agent = '', direction = '', action = '';
+      if (parts.length >= 3) {
+        agent     = parts[0];
+        direction = parts[1];
+        action    = parts.slice(2).join(' - ');
+      } else if (parts.length === 2) {
+        agent  = parts[0];
+        action = parts[1];
+      } else {
+        action = m[2];
+      }
+      current = {
+        date:      m[1].trim(),
+        agent:     agent.trim(),
+        direction: direction.trim(),
+        action:    action.trim(),
+      };
+    } else if (current && line.trim()) {
+      current.action += '\n' + line;
+    } else if (!current && line.trim()) {
+      entries.push({ date: '', agent: '', direction: '', action: line.trim() });
+    }
+  }
+  if (current) entries.push(current);
+  return entries;
+}
+
+function renderActivityLog(container, rawText) {
+  const entries = parseActivityLog(rawText);
+
+  const wrapper = document.createElement('div');
+  wrapper.className        = 'field-item';
+  wrapper.style.gridColumn = '1 / -1';
+
+  const lbl = document.createElement('div');
+  lbl.className   = 'field-label';
+  lbl.textContent = entries.length
+    ? `Activiteitenlog (${entries.length} items)`
+    : 'Activiteitenlog';
+  wrapper.appendChild(lbl);
+
+  if (!entries.length) {
+    const emp = document.createElement('div');
+    emp.className   = 'field-value empty';
+    emp.textContent = 'Geen log beschikbaar';
+    wrapper.appendChild(emp);
+    container.appendChild(wrapper);
+    return;
+  }
+
+  const timeline = document.createElement('div');
+  timeline.className = 'log-timeline';
+
+  // Newest entries first
+  for (const entry of [...entries].reverse()) {
+    const isWarn = hasWarning('', entry.action);
+    const isSms  = /SMS\s+verstuurd/i.test(entry.action);
+    const isDead = /overlijden|OVERLEDEN|gestorven|nabestaand/i.test(entry.action);
+
+    const div = document.createElement('div');
+    div.className = 'log-entry' + (isWarn || isDead ? ' log-warn' : isSms ? ' log-sms' : '');
+
+    const meta = document.createElement('div');
+    meta.className = 'log-meta';
+
+    if (entry.date) {
+      const ds = document.createElement('span');
+      ds.textContent = entry.date;
+      meta.appendChild(ds);
+    }
+    if (entry.direction) {
+      const dl = entry.direction.toLowerCase();
+      const ds = document.createElement('span');
+      ds.className = 'log-dir ' + (
+        dl.includes('inbound')  ? 'log-dir-in'  :
+        dl.includes('outbound') ? 'log-dir-out' : 'log-dir-sys'
+      );
+      ds.textContent = entry.direction;
+      meta.appendChild(ds);
+    }
+    if (entry.agent) {
+      const as = document.createElement('span');
+      as.textContent = entry.agent;
+      meta.appendChild(as);
+    }
+    if (isWarn || isDead) {
+      const ws = document.createElement('span');
+      ws.className   = 'log-warn-tag';
+      ws.textContent = isDead ? '✝ Overlijden' : '⚠ Let op';
+      meta.appendChild(ws);
+    }
+    div.appendChild(meta);
+
+    const txt = document.createElement('div');
+    txt.className   = 'log-text';
+    txt.textContent = entry.action;
+    div.appendChild(txt);
+
+    timeline.appendChild(div);
+  }
+
+  wrapper.appendChild(timeline);
+  container.appendChild(wrapper);
+}
+
+function addFieldItem(container, key, val) {
+  const display = (val === '' || val === null || val === undefined) ? '—' : String(val);
+
+  // Special rendering for activity log (SObjectLog__c)
+  if (key === 'SObjectLog__c') {
+    renderActivityLog(container, display);
+    return;
+  }
+
+  // Standard rendering
+  const clean = display.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '—';
+  const item  = document.createElement('div');
+  item.className = 'field-item';
+  item.innerHTML = `
+    <div class="field-label">${esc(friendlyName(key))}</div>
+    <div class="field-value${clean === '—' ? ' empty' : ''}">${esc(clean)}</div>
+  `;
+  container.appendChild(item);
+}
+
+function friendlyName(k) {
+  const map = {
+    'Id':                                    'Klant ID',
+    'Name':                                  'Naam',
+    'Phone':                                 'Telefoon',
+    'MobilePhone':                           'Mobiel',
+    'HomePhone':                             'Thuistelefoon',
+    'Fax':                                   'Fax',
+    'BillingStreet':                         'Straat',
+    'BillingCity':                           'Stad',
+    'BillingPostalCode':                     'Postcode',
+    'BillingState':                          'Provincie',
+    'BillingCountry':                        'Land',
+    'House_Number__c':                       'Huisnummer',
+    'House_Number_Extension__c':             'Huisnummer toevoeging',
+    'vlocity_cmt__BillingEmailAddress__c':   'E-mailadres',
+    'Email':                                 'E-mailadres',
+    'vlocity_cmt__Status__c':                'Status',
+    'IsActive':                              'Actief',
+    'CreatedDate':                           'Aangemaakt op',
+    'LastModifiedDate':                      'Laatst gewijzigd',
+    'InactivationDate__c':                   'Gedeactiveerd op',
+    'Segment__c':                            'Segment',
+    'Brand_Type__c':                         'Merk',
+    'IsCustomerPortal':                      'Klantenportaal',
+    'VIP_Customer__c':                       'VIP Klant',
+    'AccountSource':                         'Bron',
+    'Sales_Channel__c':                      'Verkoopkanaal',
+    'Is_B2B_Account__c':                     'B2B Account',
+    'Bank_Account_Number__c':                'IBAN',
+    'Bank_Account_Holder_Name__c':           'Rekeninghouder',
+    'Payment_Method__c':                     'Betaalmethode',
+    'Flash_Message__c':                      'Waarschuwing',
+    'SObjectLog__c':                         'Activiteitenlog',
+    'Total_Subscriptions__c':                'Totaal abonnementen',
+    'NumberOfVoiceSubscription__c':          'Spraakabonnementen',
+    'KvK_Number__c':                         'KvK-nummer',
+    'Tax_ID__c':                             'BTW-nummer',
+  };
+  return map[k] || k.replace(/__c$/, '').replace(/_/g, ' ');
+}
+
+// ── UI helpers ─────────────────────────────────────────────────────────────
+function hideAll() {
+  loader.style.display  = 'none';
+  empty.style.display   = 'none';
+  welcome.style.display = 'none';
+  table.style.display   = 'none';
+  pager.innerHTML       = '';
+}
+function showLoader() {
+  hideAll();
+  loader.style.display = 'block';
+}
+function showWelcome() {
+  hideAll();
+  welcome.style.display = 'block';
+  resInfo.textContent   = '';
+  expBtn.style.display  = 'none';
+  pager.innerHTML       = '';
+}
+function showError(msg) {
+  hideAll();
+  empty.style.display = 'block';
+  document.getElementById('empty-title').textContent = 'Error';
+  document.getElementById('empty-sub').textContent   = msg || 'Something went wrong.';
+}
+function esc(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── CSV export ─────────────────────────────────────────────────────────────
+expBtn.addEventListener('click', () => {
+  if (!lastResults.length) return;
+  const headers = ['Naam','Straat','Postcode','Stad','Telefoon','E-mail','IBAN','Status','Klant ID'];
+  const rows = lastResults.map(r => [
+    r.name, r.street, r.postal, r.city, r.phone, r.email, r.iban, r.status, r.id
+  ].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const csv  = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `zoekresultaten_${Date.now()}.csv`;
+  a.click();
+});
+
+// ── Events ─────────────────────────────────────────────────────────────────
+btn.addEventListener('click', () => doSearch(1));
+
+inp.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { clearTimeout(debounceTimer); doSearch(1); }
+});
+
+inp.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    if (inp.value.trim().length >= 2) doSearch(1);
+    else if (!inp.value.trim()) showWelcome();
+  }, 350);
+});
+
+clrBtn.addEventListener('click', () => {
+  inp.value = '';
+  showWelcome();
+  inp.focus();
+});
+
+// Modal close
+modalClose.addEventListener('click', () => overlay.classList.remove('open'));
+overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    overlay.classList.remove('open');
+    dbModalOverlay.classList.remove('open');
+  }
+});
+
+// ── Database management modal ───────────────────────────────────────────────
+manageDbBtn.addEventListener('click', () => {
+  loadDatabases().then(() => renderDbList(allDatabases));
+  dbModalOverlay.classList.add('open');
+});
+dbModalClose.addEventListener('click', () => dbModalOverlay.classList.remove('open'));
+dbModalOverlay.addEventListener('click', e => {
+  if (e.target === dbModalOverlay) dbModalOverlay.classList.remove('open');
+});
+
+function renderDbList(dbs) {
+  if (!dbs || !dbs.length) {
+    dbList.innerHTML = '<p style="color:var(--sub);font-size:13px">Geen databases gevonden.</p>';
+    return;
+  }
+  dbList.innerHTML = '';
+  dbs.forEach(db => {
+    const col  = dbColor(db.name);
+    const row  = document.createElement('div');
+    row.className = 'db-row';
+    row.innerHTML = `
+      <div class="db-row-dot" style="background:${col}"></div>
+      <div class="db-row-info">
+        <div class="db-row-name" id="dbname-${CSS.escape(db.name)}">${esc(db.name)}</div>
+        <div class="db-row-meta">${(db.records||0).toLocaleString('nl-NL')} records · ${db.sizeMB} MB · ${db.file}</div>
+      </div>
+      <div class="db-row-actions">
+        <button class="db-btn" data-action="rename" data-name="${esc(db.name)}">Naam</button>
+        <button class="db-btn danger" data-action="delete" data-name="${esc(db.name)}">Verwijder</button>
+      </div>
+    `;
+    dbList.appendChild(row);
+  });
+
+  // Wire up action buttons
+  dbList.querySelectorAll('.db-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      const name   = btn.dataset.name;
+      if (action === 'rename') renameDb(name);
+      if (action === 'delete') deleteDb(name);
+    });
+  });
+}
+
+function renameDb(oldName) {
+  const newName = prompt(`Nieuwe naam voor "${oldName}":`, oldName);
+  if (!newName || newName === oldName) return;
+  fetch(`/api/databases/rename?old=${encodeURIComponent(oldName)}&new=${encodeURIComponent(newName)}`)
+    .then(r => r.json())
+    .then(d => {
+      if (d.error) { alert('Fout: ' + d.error); return; }
+      // Update active filter set
+      if (activeDbNames.has(oldName)) {
+        activeDbNames.delete(oldName);
+        activeDbNames.add(newName);
+      }
+      loadDatabases();
+      if (currentQ) doSearch(currentPage);
+    })
+    .catch(e => alert('Fout bij hernoemen: ' + e));
+}
+
+function deleteDb(name) {
+  if (!confirm(`Database "${name}" definitief verwijderen?\n\nHet .db bestand wordt verwijderd. Dit kan niet ongedaan worden gemaakt.`)) return;
+  fetch(`/api/databases/delete?name=${encodeURIComponent(name)}`)
+    .then(r => r.json())
+    .then(d => {
+      if (d.error) { alert('Fout: ' + d.error); return; }
+      activeDbNames.delete(name);
+      if (activeDbNames.size === 0) {
+        // Enable all remaining
+        allDatabases.filter(db => db.name !== name).forEach(db => activeDbNames.add(db.name));
+      }
+      loadDatabases();
+      if (currentQ) doSearch(1);
+    })
+    .catch(e => alert('Fout bij verwijderen: ' + e));
+}
+
+// Auto-focus search box
+inp.focus();
+</script>
+</body>
+</html>
