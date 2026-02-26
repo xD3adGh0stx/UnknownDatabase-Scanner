@@ -621,42 +621,42 @@
 <header>
   <div style="display:flex;flex-direction:column;gap:2px">
     <h1>UnknownDatabase Scanner</h1>
-    <span style="font-size:11px;color:var(--sub)">Lokale database zoeker</span>
+    <span style="font-size:11px;color:var(--sub)">Local database search</span>
   </div>
-  <span id="stats-badge">Laden...</span>
-  <button id="manage-db-btn" title="Databases beheren">&#9776; Databases</button>
+  <span id="stats-badge">Loading...</span>
+  <button id="manage-db-btn" title="Manage databases">&#9776; Databases</button>
 </header>
 
 <!-- ── Search ─────────────────────────────────────────────────────────── -->
 <div class="search-wrap">
   <div class="search-row">
-    <input id="search-input" type="text" placeholder="Zoek op naam, adres, telefoon, e-mail, IBAN..." autocomplete="off" spellcheck="false">
+    <input id="search-input" type="text" placeholder="Search by name, address, phone, email, IBAN..." autocomplete="off" spellcheck="false">
     <select id="field-select">
-      <option value="all">Alle velden</option>
-      <option value="name">Naam</option>
-      <option value="phone">Telefoon</option>
-      <option value="email">E-mail</option>
+      <option value="all">All fields</option>
+      <option value="name">Name</option>
+      <option value="phone">Phone</option>
+      <option value="email">Email</option>
       <option value="iban">IBAN</option>
-      <option value="city">Stad</option>
-      <option value="postal">Postcode</option>
-      <option value="street">Straat</option>
-      <option value="id">Klant ID</option>
-      <option value="notes">Notities / Log</option>
+      <option value="city">City</option>
+      <option value="postal">Postal code</option>
+      <option value="street">Street</option>
+      <option value="id">Customer ID</option>
+      <option value="notes">Notes / Log</option>
     </select>
-    <button id="search-btn">Zoeken</button>
-    <button id="clear-btn">Wissen</button>
+    <button id="search-btn">Search</button>
+    <button id="clear-btn">Clear</button>
   </div>
 </div>
 
 <!-- ── Database filter ────────────────────────────────────────────────── -->
 <div id="db-filter">
-  <span class="filter-label">Database:</span>
+  <span class="filter-label">Filter:</span>
 </div>
 
 <!-- ── Results bar ─────────────────────────────────────────────────────── -->
 <div class="results-bar">
   <span id="result-info"></span>
-  <button id="export-btn">Exporteer CSV</button>
+  <button id="export-btn">Export CSV</button>
 </div>
 
 <!-- ── Table / States ──────────────────────────────────────────────────── -->
@@ -664,7 +664,7 @@
 
   <div id="loader">
     <div class="spinner"></div>
-    Zoeken...
+    Searching...
   </div>
 
   <div id="empty-state">
@@ -675,38 +675,38 @@
 
   <div id="welcome">
     <div class="logo">🗄️</div>
-    <h2>Welkom bij UnknownDatabase Scanner</h2>
-    <p>Typ een zoekterm om personen op te zoeken. Je kunt zoeken op naam, telefoon, e-mail, IBAN, postcode, straat of klant-ID.</p>
+    <h2>Welcome to UnknownDatabase Scanner</h2>
+    <p>Type a search term to look up records. You can search by name, phone, email, IBAN, postal code, street or customer ID.</p>
     <div class="search-tips">
       <div class="tip">
         <div class="tip-icon">👤</div>
-        <div class="tip-title">Op naam</div>
-        <div class="tip-text">Kies "Naam" en typ een voor- of achternaam</div>
+        <div class="tip-title">By name</div>
+        <div class="tip-text">Select "Name" and type a first or last name</div>
       </div>
       <div class="tip">
         <div class="tip-icon">📞</div>
-        <div class="tip-title">Op telefoon</div>
-        <div class="tip-text">Kies "Telefoon" en typ een (deel van een) nummer</div>
+        <div class="tip-title">By phone</div>
+        <div class="tip-text">Select "Phone" and type part of a number</div>
       </div>
       <div class="tip">
         <div class="tip-icon">🏦</div>
-        <div class="tip-title">Op IBAN</div>
-        <div class="tip-text">Kies "IBAN" en typ een rekeningnummer, bijv. "NL77RABO"</div>
+        <div class="tip-title">By IBAN</div>
+        <div class="tip-text">Select "IBAN" and type an account number, e.g. "NL77RABO"</div>
       </div>
       <div class="tip">
         <div class="tip-icon">📧</div>
-        <div class="tip-title">Op e-mail</div>
-        <div class="tip-text">Kies "E-mail" en typ een deel van het e-mailadres</div>
+        <div class="tip-title">By email</div>
+        <div class="tip-text">Select "Email" and type part of an email address</div>
       </div>
       <div class="tip">
         <div class="tip-icon">🏠</div>
-        <div class="tip-title">Op postcode</div>
-        <div class="tip-text">Kies "Postcode" en typ bijv. "1504" of "1504 HN"</div>
+        <div class="tip-title">By postal code</div>
+        <div class="tip-text">Select "Postal code" and type e.g. "1504" or "1504 HN"</div>
       </div>
       <div class="tip">
         <div class="tip-icon">🔍</div>
-        <div class="tip-title">Alle velden</div>
-        <div class="tip-text">Laat "Alle velden" staan voor een brede zoekopdracht</div>
+        <div class="tip-title">All fields</div>
+        <div class="tip-text">Leave "All fields" selected for a broad search</div>
       </div>
     </div>
   </div>
@@ -714,12 +714,12 @@
   <table id="results-table" style="display:none">
     <thead>
       <tr>
-        <th>Naam</th>
-        <th>Straat + Nr.</th>
-        <th>Postcode</th>
-        <th>Stad</th>
-        <th>Telefoon</th>
-        <th>E-mail</th>
+        <th>Name</th>
+        <th>Street + No.</th>
+        <th>Postal code</th>
+        <th>City</th>
+        <th>Phone</th>
+        <th>Email</th>
         <th>IBAN</th>
         <th>Status</th>
       </tr>
@@ -748,15 +748,15 @@
 <div id="db-modal-overlay">
   <div id="db-modal">
     <div id="db-modal-header">
-      <span id="db-modal-title">Databases beheren</span>
-      <button id="db-modal-close" title="Sluiten">&#x2715;</button>
+      <span id="db-modal-title">Manage databases</span>
+      <button id="db-modal-close" title="Close">&#x2715;</button>
     </div>
     <div id="db-modal-body">
-      <div id="db-list">Laden...</div>
+      <div id="db-list">Loading...</div>
       <div class="db-add-note">
-        <strong style="color:var(--accent)">Database toevoegen?</strong><br>
-        Sleep een nieuw .txt bestand op <strong>import.bat</strong> en geef het een naam.
-        Het wordt automatisch toegevoegd aan de lijst.
+        <strong style="color:var(--accent)">Add a database?</strong><br>
+        Run <strong>menu.bat</strong> and select option 2 (Import database).
+        It will be added to the list automatically.
       </div>
     </div>
   </div>
@@ -788,7 +788,7 @@ function dbBadgeHtml(dbName) {
   return `<span class="badge-db" style="background:${col}22;color:${col};border:1px solid ${col}44">${esc(dbName)}</span>`;
 }
 
-// Keywords die een waarschuwing triggeren in de log
+// Keywords that trigger a warning highlight in the activity log (Dutch - matches database content)
 const WARN_KEYWORDS = [
   'agressief','agressieve','agressiviteit',
   'dreigt','bedreiging','bedreigt','wapens',
@@ -800,7 +800,7 @@ const WARN_KEYWORDS = [
   'bewindvoerder','bewindvoering','schuldhulpverlening',
   'politie','aangifte','beveiliger',
   'klant is agressief',
-  'overlijden','overleden','gestorven','nabestaande','nabestaanden',
+  'overlijden','overleden','gestorven','nabestaande','nabestaanden','!',
 ];
 
 function hasWarning(name, log) {
@@ -863,7 +863,7 @@ function renderDbFilter(dbs) {
     chip.className   = 'db-chip' + (activeDbNames.has(db.name) ? '' : ' off');
     chip.textContent = db.name;
     chip.style.cssText = `background:${col}22;color:${col};border-color:${col}55`;
-    chip.title = `${(db.records||0).toLocaleString('nl-NL')} records`;
+    chip.title = `${(db.records||0).toLocaleString('en-US')} records`;
     chip.addEventListener('click', () => {
       if (activeDbNames.has(db.name)) {
         if (activeDbNames.size > 1) activeDbNames.delete(db.name);
@@ -878,12 +878,12 @@ function renderDbFilter(dbs) {
 }
 
 fetch('/api/stats').then(r => r.json()).then(d => {
-  let badge = `${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
+  let badge = `${d.total.toLocaleString('en-US')} records · ${d.dbSizeMB} MB`;
   if (d.databases && d.databases.length > 1) {
-    badge = `${d.databases.length} databases · ${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
+    badge = `${d.databases.length} databases · ${d.total.toLocaleString('en-US')} records · ${d.dbSizeMB} MB`;
   }
   statsBadge.textContent = badge;
-}).catch(() => { statsBadge.textContent = 'Database geladen'; });
+}).catch(() => { statsBadge.textContent = 'Database loaded'; });
 
 loadDatabases();
 
@@ -913,15 +913,15 @@ function renderResults(data) {
 
   if (!lastResults.length) {
     empty.style.display = 'block';
-    document.getElementById('empty-title').textContent = 'Geen resultaten gevonden';
+    document.getElementById('empty-title').textContent = 'No results found';
     document.getElementById('empty-sub').textContent =
-      `Niets gevonden voor "${currentQ}". Probeer een andere zoekterm.`;
+      `Nothing found for "${currentQ}". Try a different search term.`;
     resInfo.textContent  = '';
     expBtn.style.display = 'none';
     return;
   }
 
-  resInfo.textContent  = `${data.total.toLocaleString('nl-NL')} resultaten gevonden (pagina ${data.page} van ${totalPages})`;
+  resInfo.textContent  = `${data.total.toLocaleString('en-US')} results found (page ${data.page} of ${totalPages})`;
   expBtn.style.display = 'inline-block';
 
   tbody.innerHTML = '';
@@ -929,7 +929,7 @@ function renderResults(data) {
     const tr = document.createElement('tr');
     tr.dataset.id = r.id;
     const warnBadge = hasWarning(r.name, '') ?
-      '<span class="badge-warn">⚠ Let op</span>' : '';
+      '<span class="badge-warn">⚠ Warning</span>' : '';
     const dbBadge = allDatabases.length > 1 ? dbBadgeHtml(r._db) : '';
     tr.innerHTML = `
       <td class="td-name">${esc(r.name)}${warnBadge}${dbBadge}</td>
@@ -997,7 +997,7 @@ function openRecord(id, name, dbName) {
     ? ` <span style="font-size:12px;font-weight:400;color:${dbColor(dbName)}">[${dbName}]</span>`
     : '';
   modalTitle.innerHTML = esc(name || 'Record Details') + dbTag;
-  modalGrid.innerHTML  = '<div style="color:var(--sub);padding:20px">Laden...</div>';
+  modalGrid.innerHTML  = '<div style="color:var(--sub);padding:20px">Loading...</div>';
   overlay.classList.add('open');
 
   const params = new URLSearchParams({ id });
@@ -1009,35 +1009,35 @@ function openRecord(id, name, dbName) {
       if (d.error) { modalGrid.innerHTML = `<p style="color:var(--red)">${esc(d.error)}</p>`; return; }
       renderModal(d.record, d.db);
     })
-    .catch(() => { modalGrid.innerHTML = '<p style="color:var(--red)">Laden mislukt</p>'; });
+    .catch(() => { modalGrid.innerHTML = '<p style="color:var(--red)">Loading failed</p>'; });
 }
 
 // Always show these key fields in the summary even if empty
 const SUMMARY_FIELDS = [
-  { key: 'Flash_Message__c',                      label: 'Waarschuwing'  },
-  { key: 'Name',                                  label: 'Naam'          },
-  { key: 'Phone',                                 label: 'Telefoon'      },
-  { key: 'MobilePhone',                           label: 'Mobiel'        },
-  { key: 'vlocity_cmt__BillingEmailAddress__c',   label: 'E-mail'        },
-  { key: 'Email',                                 label: 'E-mail'        },
-  { key: 'Email__c',                              label: 'E-mail'        },
-  { key: 'PersonEmail',                           label: 'E-mail'        },
-  { key: 'Contact_Email__c',                      label: 'E-mail'        },
-  { key: 'EmailAddress__c',                       label: 'E-mail'        },
+  { key: 'Flash_Message__c',                      label: 'Warning'       },
+  { key: 'Name',                                  label: 'Name'          },
+  { key: 'Phone',                                 label: 'Phone'         },
+  { key: 'MobilePhone',                           label: 'Mobile'        },
+  { key: 'vlocity_cmt__BillingEmailAddress__c',   label: 'Email'         },
+  { key: 'Email',                                 label: 'Email'         },
+  { key: 'Email__c',                              label: 'Email'         },
+  { key: 'PersonEmail',                           label: 'Email'         },
+  { key: 'Contact_Email__c',                      label: 'Email'         },
+  { key: 'EmailAddress__c',                       label: 'Email'         },
   { key: 'Bank_Account_Number__c',                label: 'IBAN'          },
-  { key: 'Bank_Account_Holder_Name__c',           label: 'Rekeninghouder'},
+  { key: 'Bank_Account_Holder_Name__c',           label: 'Account holder'},
   { key: 'vlocity_cmt__Status__c',                label: 'Status'        },
   { key: 'Segment__c',                            label: 'Segment'       },
-  { key: 'BillingStreet',                         label: 'Straat'        },
-  { key: 'House_Number__c',                       label: 'Huisnummer'    },
-  { key: 'BillingCity',                           label: 'Stad'          },
-  { key: 'BillingPostalCode',                     label: 'Postcode'      },
-  { key: 'BillingCountry',                        label: 'Land'          },
+  { key: 'BillingStreet',                         label: 'Street'        },
+  { key: 'House_Number__c',                       label: 'House no.'     },
+  { key: 'BillingCity',                           label: 'City'          },
+  { key: 'BillingPostalCode',                     label: 'Postal code'   },
+  { key: 'BillingCountry',                        label: 'Country'       },
 ];
 
 // Named groups – order matters; remaining non-empty fields go in "Overige velden"
 const GROUPS = [
-  { title: 'Algemeen', keys: [
+  { title: 'General', keys: [
       'Id','Name','Type','IsActive','vlocity_cmt__Status__c','Segment__c',
       'Segment_Indicator__c','Brand_Type__c','AccountSource','RecordTypeId',
       'Customer_Type__c','Business_Type__c','Is_B2B_Account__c',
@@ -1051,18 +1051,18 @@ const GROUPS = [
       'coosto__WhatsApp_Id__c','coosto__Facebook_Id__c','coosto__Twitter_Id__c',
       'coosto__Instagram_Id__c','coosto__LinkedIn_Id__c','coosto__Youtube_Id__c',
   ]},
-  { title: 'Factuuradres', keys: [
+  { title: 'Billing address', keys: [
       'BillingStreet','House_Number__c','House_Number_Extension__c',
       'BillingCity','BillingPostalCode','BillingState','BillingCountry',
       'Postal_Code__c','City__c','Street_Address__c',
       'Main_Address__c','Billing_Address__c','Billing_Line_2__c',
       'PO_Box__c','PO_Box_Number__c',
   ]},
-  { title: 'Bezorgadres', keys: [
+  { title: 'Shipping address', keys: [
       'ShippingStreet','ShippingCity','ShippingPostalCode',
       'ShippingState','ShippingCountry',
   ]},
-  { title: 'Identiteit & ID\'s', keys: [
+  { title: 'Identity & IDs', keys: [
       'Id','Account_Salesforce_ID__c','AccountNumber','Siebel_Customer_ID__c',
       'Customer_Code_Legacy_System__c','SourceSystemIdentifier',
       'Service_Aggregator_ID__c','External_Reference_Number__c',
@@ -1071,7 +1071,7 @@ const GROUPS = [
       'Chamber_Of_Commerce_Formula__c','CountryCode__c',
       'vlocity_cmt__PartyId__c','vlocity_cmt__PremisesId__c',
   ]},
-  { title: 'Financieel & Bankgegevens', keys: [
+  { title: 'Financial & Banking', keys: [
       'Bank_Account_Number__c','Bank_Account_Holder_Name__c',
       'Bank_Details_Check__c','Payment_Method__c','Payment_Terms__c',
       'Bill_Day__c','Paper_Invoice__c','Paper_Invoice_Charge__c',
@@ -1082,27 +1082,27 @@ const GROUPS = [
       'vlocity_cmt__CreditRating__c','vlocity_cmt__CreditScore__c',
       'AnnualRevenue',
   ]},
-  { title: 'Abonnementen', keys: [
+  { title: 'Subscriptions', keys: [
       'Total_Subscriptions__c','NumberOfVoiceSubscription__c',
       'Total_Data_Voice_Subscriptions__c','Financial_Subscriptions__c',
       'Data_Subscriptions__c','Num_Active_Assets__c','Num_of_Assets_LifeCycle__c',
       'Num_of_Non_Inactive_Assets_LifeCycle__c','Num_of_Child_Accounts__c',
       'Num_of_Active_Child_Accounts__c','NumberOfEmployees',
   ]},
-  { title: 'Datums', keys: [
+  { title: 'Dates', keys: [
       'CreatedDate','LastModifiedDate','LastActivityDate','LastViewedDate',
       'InactivationDate__c','Activation_Date__c','Contract_Sign_Date__c',
       'Last_Opportunity_Close_Date__c','vlocity_cmt__CustomerSinceDate__c',
       'LastNCRefreshTimestamp__c',
   ]},
-  { title: 'Accountinstellingen', keys: [
+  { title: 'Account settings', keys: [
       'IsCustomerPortal','IsPartner','VIP_Customer__c','Sales_Channel__c',
       'UserProfile__c','UserRole__c','OwnerId','Dealer_Code__c',
       'Account_shielding__c','Has_Insurance__c','Chubb_insurance__c',
       'HasSensitivityDataPermission__c','HasB2BSensitivityDataPermission__c',
       'vlocity_cmt__HasFraud__c','Block_Status__c','Customer_Level__c',
   ]},
-  { title: 'Activiteitenlog', keys: [
+  { title: 'Activity log', keys: [
       'SObjectLog__c',
   ]},
 ];
@@ -1142,7 +1142,7 @@ function renderModal(rec, sourceDb) {
     icon.style.cssText = 'font-size:24px;color:var(--red);flex-shrink:0;line-height:1.1';
     const body = document.createElement('div');
     body.style.flex = '1';
-    body.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Waarschuwing</div><div style="font-size:13px;color:#f08080;line-height:1.65;white-space:pre-wrap">${esc(flashMsg)}</div>`;
+    body.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Warning</div><div style="font-size:13px;color:#f08080;line-height:1.65;white-space:pre-wrap">${esc(flashMsg)}</div>`;
     banner.appendChild(icon);
     banner.appendChild(body);
     modalGrid.appendChild(banner);
@@ -1151,7 +1151,7 @@ function renderModal(rec, sourceDb) {
   // ── Summary bar: for each label show the first non-empty value found ────
   const summaryTitle = document.createElement('div');
   summaryTitle.className   = 'section-title';
-  summaryTitle.textContent = 'Samenvatting';
+  summaryTitle.textContent = 'Summary';
   modalGrid.appendChild(summaryTitle);
 
   // Build label → best value map
@@ -1232,7 +1232,7 @@ function renderModal(rec, sourceDb) {
   if (remaining.length) {
     const otherTitle = document.createElement('div');
     otherTitle.className   = 'section-title';
-    otherTitle.textContent = 'Overige velden';
+    otherTitle.textContent = 'Other fields';
     modalGrid.appendChild(otherTitle);
     for (const k of remaining) {
       addFieldItem(modalGrid, k, rec[k]);
@@ -1295,14 +1295,14 @@ function renderActivityLog(container, rawText) {
   const lbl = document.createElement('div');
   lbl.className   = 'field-label';
   lbl.textContent = entries.length
-    ? `Activiteitenlog (${entries.length} items)`
-    : 'Activiteitenlog';
+    ? `Activity log (${entries.length} items)`
+    : 'Activity log';
   wrapper.appendChild(lbl);
 
   if (!entries.length) {
     const emp = document.createElement('div');
     emp.className   = 'field-value empty';
-    emp.textContent = 'Geen log beschikbaar';
+    emp.textContent = 'No log available';
     wrapper.appendChild(emp);
     container.appendChild(wrapper);
     return;
@@ -1346,7 +1346,7 @@ function renderActivityLog(container, rawText) {
     if (isWarn || isDead) {
       const ws = document.createElement('span');
       ws.className   = 'log-warn-tag';
-      ws.textContent = isDead ? '✝ Overlijden' : '⚠ Let op';
+      ws.textContent = isDead ? '✝ Deceased' : '⚠ Warning';
       meta.appendChild(ws);
     }
     div.appendChild(meta);
@@ -1385,42 +1385,42 @@ function addFieldItem(container, key, val) {
 
 function friendlyName(k) {
   const map = {
-    'Id':                                    'Klant ID',
-    'Name':                                  'Naam',
-    'Phone':                                 'Telefoon',
-    'MobilePhone':                           'Mobiel',
-    'HomePhone':                             'Thuistelefoon',
+    'Id':                                    'Customer ID',
+    'Name':                                  'Name',
+    'Phone':                                 'Phone',
+    'MobilePhone':                           'Mobile',
+    'HomePhone':                             'Home phone',
     'Fax':                                   'Fax',
-    'BillingStreet':                         'Straat',
-    'BillingCity':                           'Stad',
-    'BillingPostalCode':                     'Postcode',
-    'BillingState':                          'Provincie',
-    'BillingCountry':                        'Land',
-    'House_Number__c':                       'Huisnummer',
-    'House_Number_Extension__c':             'Huisnummer toevoeging',
-    'vlocity_cmt__BillingEmailAddress__c':   'E-mailadres',
-    'Email':                                 'E-mailadres',
+    'BillingStreet':                         'Street',
+    'BillingCity':                           'City',
+    'BillingPostalCode':                     'Postal code',
+    'BillingState':                          'State/Province',
+    'BillingCountry':                        'Country',
+    'House_Number__c':                       'House no.',
+    'House_Number_Extension__c':             'House no. extension',
+    'vlocity_cmt__BillingEmailAddress__c':   'Email address',
+    'Email':                                 'Email address',
     'vlocity_cmt__Status__c':                'Status',
-    'IsActive':                              'Actief',
-    'CreatedDate':                           'Aangemaakt op',
-    'LastModifiedDate':                      'Laatst gewijzigd',
-    'InactivationDate__c':                   'Gedeactiveerd op',
+    'IsActive':                              'Active',
+    'CreatedDate':                           'Created on',
+    'LastModifiedDate':                      'Last modified',
+    'InactivationDate__c':                   'Deactivated on',
     'Segment__c':                            'Segment',
-    'Brand_Type__c':                         'Merk',
-    'IsCustomerPortal':                      'Klantenportaal',
-    'VIP_Customer__c':                       'VIP Klant',
-    'AccountSource':                         'Bron',
-    'Sales_Channel__c':                      'Verkoopkanaal',
+    'Brand_Type__c':                         'Brand',
+    'IsCustomerPortal':                      'Customer portal',
+    'VIP_Customer__c':                       'VIP Customer',
+    'AccountSource':                         'Source',
+    'Sales_Channel__c':                      'Sales channel',
     'Is_B2B_Account__c':                     'B2B Account',
     'Bank_Account_Number__c':                'IBAN',
-    'Bank_Account_Holder_Name__c':           'Rekeninghouder',
-    'Payment_Method__c':                     'Betaalmethode',
-    'Flash_Message__c':                      'Waarschuwing',
-    'SObjectLog__c':                         'Activiteitenlog',
-    'Total_Subscriptions__c':                'Totaal abonnementen',
-    'NumberOfVoiceSubscription__c':          'Spraakabonnementen',
-    'KvK_Number__c':                         'KvK-nummer',
-    'Tax_ID__c':                             'BTW-nummer',
+    'Bank_Account_Holder_Name__c':           'Account holder',
+    'Payment_Method__c':                     'Payment method',
+    'Flash_Message__c':                      'Warning',
+    'SObjectLog__c':                         'Activity log',
+    'Total_Subscriptions__c':                'Total subscriptions',
+    'NumberOfVoiceSubscription__c':          'Voice subscriptions',
+    'KvK_Number__c':                         'KvK number',
+    'Tax_ID__c':                             'VAT number',
   };
   return map[k] || k.replace(/__c$/, '').replace(/_/g, ' ');
 }
@@ -1460,7 +1460,7 @@ function esc(s) {
 // ── CSV export ─────────────────────────────────────────────────────────────
 expBtn.addEventListener('click', () => {
   if (!lastResults.length) return;
-  const headers = ['Naam','Straat','Postcode','Stad','Telefoon','E-mail','IBAN','Status','Klant ID'];
+  const headers = ['Name','Street','Postal code','City','Phone','Email','IBAN','Status','Customer ID'];
   const rows = lastResults.map(r => [
     r.name, r.street, r.postal, r.city, r.phone, r.email, r.iban, r.status, r.id
   ].map(v => `"${(v||'').replace(/"/g,'""')}"`));
@@ -1468,7 +1468,7 @@ expBtn.addEventListener('click', () => {
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
-  a.download = `zoekresultaten_${Date.now()}.csv`;
+  a.download = `search_results_${Date.now()}.csv`;
   a.click();
 });
 
@@ -1515,7 +1515,7 @@ dbModalOverlay.addEventListener('click', e => {
 
 function renderDbList(dbs) {
   if (!dbs || !dbs.length) {
-    dbList.innerHTML = '<p style="color:var(--sub);font-size:13px">Geen databases gevonden.</p>';
+    dbList.innerHTML = '<p style="color:var(--sub);font-size:13px">No databases found.</p>';
     return;
   }
   dbList.innerHTML = '';
@@ -1527,11 +1527,11 @@ function renderDbList(dbs) {
       <div class="db-row-dot" style="background:${col}"></div>
       <div class="db-row-info">
         <div class="db-row-name" id="dbname-${CSS.escape(db.name)}">${esc(db.name)}</div>
-        <div class="db-row-meta">${(db.records||0).toLocaleString('nl-NL')} records · ${db.sizeMB} MB · ${db.file}</div>
+        <div class="db-row-meta">${(db.records||0).toLocaleString('en-US')} records · ${db.sizeMB} MB · ${db.file}</div>
       </div>
       <div class="db-row-actions">
-        <button class="db-btn" data-action="rename" data-name="${esc(db.name)}">Naam</button>
-        <button class="db-btn danger" data-action="delete" data-name="${esc(db.name)}">Verwijder</button>
+        <button class="db-btn" data-action="rename" data-name="${esc(db.name)}">Rename</button>
+        <button class="db-btn danger" data-action="delete" data-name="${esc(db.name)}">Delete</button>
       </div>
     `;
     dbList.appendChild(row);
@@ -1549,12 +1549,12 @@ function renderDbList(dbs) {
 }
 
 function renameDb(oldName) {
-  const newName = prompt(`Nieuwe naam voor "${oldName}":`, oldName);
+  const newName = prompt(`New name for "${oldName}":`, oldName);
   if (!newName || newName === oldName) return;
   fetch(`/api/databases/rename?old=${encodeURIComponent(oldName)}&new=${encodeURIComponent(newName)}`)
     .then(r => r.json())
     .then(d => {
-      if (d.error) { alert('Fout: ' + d.error); return; }
+      if (d.error) { alert('Error: ' + d.error); return; }
       // Update active filter set
       if (activeDbNames.has(oldName)) {
         activeDbNames.delete(oldName);
@@ -1563,15 +1563,15 @@ function renameDb(oldName) {
       loadDatabases();
       if (currentQ) doSearch(currentPage);
     })
-    .catch(e => alert('Fout bij hernoemen: ' + e));
+    .catch(e => alert('Error renaming: ' + e));
 }
 
 function deleteDb(name) {
-  if (!confirm(`Database "${name}" definitief verwijderen?\n\nHet .db bestand wordt verwijderd. Dit kan niet ongedaan worden gemaakt.`)) return;
+  if (!confirm(`Permanently delete database "${name}"?\n\nThe .db file will be deleted. This cannot be undone.`)) return;
   fetch(`/api/databases/delete?name=${encodeURIComponent(name)}`)
     .then(r => r.json())
     .then(d => {
-      if (d.error) { alert('Fout: ' + d.error); return; }
+      if (d.error) { alert('Error: ' + d.error); return; }
       activeDbNames.delete(name);
       if (activeDbNames.size === 0) {
         // Enable all remaining
@@ -1580,7 +1580,7 @@ function deleteDb(name) {
       loadDatabases();
       if (currentQ) doSearch(1);
     })
-    .catch(e => alert('Fout bij verwijderen: ' + e));
+    .catch(e => alert('Error deleting: ' + e));
 }
 
 // Auto-focus search box

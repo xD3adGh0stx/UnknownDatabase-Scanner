@@ -23,8 +23,8 @@ else:
     DB_PATH = BASE_DIR / 'database.db'
 
 if not DB_PATH.exists():
-    print(f'\n[ERROR] Bestand niet gevonden: {DB_PATH}')
-    print('Voer eerst een import uit.\n')
+    print(f'\n[ERROR] File not found: {DB_PATH}')
+    print('Run an import first.\n')
     input('Press Enter to exit...')
     exit(1)
 
@@ -78,18 +78,18 @@ c.execute("PRAGMA cache_size   = 200000")
 c.execute("PRAGMA temp_store   = MEMORY")
 
 # ─── Step 1: Add iban column ───────────────────────────────────────────────
-print('Stap 1: IBAN kolom toevoegen...')
+print('Step 1: Adding IBAN column...')
 existing_cols = {row[1] for row in c.execute("PRAGMA table_info(accounts)").fetchall()}
 
 if 'iban' not in existing_cols:
     c.execute("ALTER TABLE accounts ADD COLUMN iban TEXT DEFAULT ''")
     conn.commit()
-    print('  Kolom toegevoegd.')
+    print('  Column added.')
 else:
-    print('  Kolom bestaat al.')
+    print('  Column already exists.')
 
 # ─── Step 2: Populate iban from JSON ──────────────────────────────────────
-print('Stap 2: IBAN data invullen vanuit JSON...')
+print('Step 2: Populating IBAN from JSON...')
 start = time.time()
 
 # Use SQLite json_extract for fast bulk update
@@ -102,9 +102,9 @@ try:
     """)
     iban_updated = c.rowcount
     conn.commit()
-    print(f'  {iban_updated:,} IBAN records bijgewerkt in {time.time()-start:.1f}s')
+    print(f'  {iban_updated:,} IBAN records updated in {time.time()-start:.1f}s')
 except Exception as e:
-    print(f'  json_extract niet beschikbaar ({e}), Python fallback...')
+    print(f'  json_extract not available ({e}), Python fallback...')
     rows = c.execute(
         "SELECT rowid, data FROM accounts WHERE (iban IS NULL OR iban = '') "
         "AND data LIKE '%Bank_Account_Number%'"
@@ -126,18 +126,18 @@ except Exception as e:
     if batch:
         conn.executemany("UPDATE accounts SET iban = ? WHERE rowid = ?", batch)
         conn.commit()
-    print(f'  {len(batch):,} IBAN records bijgewerkt in {time.time()-start:.1f}s')
+    print(f'  {len(batch):,} IBAN records updated in {time.time()-start:.1f}s')
 
 # ─── Step 3: Extract phone from activity logs ─────────────────────────────
-print('Stap 3: Telefoonnummers extraheren uit activiteitenlog...')
-print('  (Dit kan een paar minuten duren...)')
+print('Step 3: Extracting phone numbers from activity logs...')
+print('  (This may take a few minutes...)')
 start = time.time()
 
 rows = c.execute(
     "SELECT rowid, data FROM accounts "
     "WHERE (phone IS NULL OR phone = '') AND data LIKE '%SObjectLog%'"
 ).fetchall()
-print(f'  {len(rows):,} records te controleren...')
+print(f'  {len(rows):,} records to check...')
 
 total_phone = 0
 batch       = []
@@ -168,7 +168,7 @@ for rowid, data_str in rows:
             total_phone += len(batch)
             batch = []
             elapsed = time.time() - start
-            print(f'\r  ...{total_phone:,} telefoonnummers bijgewerkt ({elapsed:.0f}s)',
+            print(f'\r  ...{total_phone:,} phone numbers updated ({elapsed:.0f}s)',
                   end='', flush=True)
     except Exception:
         pass
@@ -179,10 +179,10 @@ if batch:
     total_phone += len(batch)
 
 elapsed = time.time() - start
-print(f'\r  {total_phone:,} telefoonnummers bijgewerkt in {elapsed:.1f}s            ')
+print(f'\r  {total_phone:,} phone numbers updated in {elapsed:.1f}s            ')
 
 # ─── Step 4: Update / create indexes ──────────────────────────────────────
-print('Stap 4: Indexes aanmaken...')
+print('Step 4: Creating indexes...')
 for sql in [
     "CREATE INDEX IF NOT EXISTS idx_iban  ON accounts(iban  COLLATE NOCASE)",
     "CREATE INDEX IF NOT EXISTS idx_phone ON accounts(phone)",
@@ -191,7 +191,7 @@ for sql in [
 ]:
     c.execute(sql)
 conn.commit()
-print('  Klaar.')
+print('  Done.')
 
 # ─── Step 5: Summary ──────────────────────────────────────────────────────
 c.execute("PRAGMA synchronous = NORMAL")
@@ -203,10 +203,10 @@ total       = c.execute("SELECT COUNT(*) FROM accounts").fetchone()[0]
 conn.close()
 
 print(f'\n{"═"*44}')
-print(f'  Migratie voltooid!')
+print(f'  Migration complete!')
 print(f'{"═"*44}')
-print(f'  Totaal records       : {total:,}')
-print(f'  Records met IBAN     : {iban_count:,}')
-print(f'  Records met telefoon : {phone_count:,}')
-print(f'\n  Start nu menu.bat en kies optie 1 om te zoeken!\n')
-input('Press Enter to afsluiten...')
+print(f'  Total records    : {total:,}')
+print(f'  Records with IBAN: {iban_count:,}')
+print(f'  Records with phone: {phone_count:,}')
+print(f'\n  Run menu.bat and select option 1 to start searching!\n')
+input('Press Enter to exit...')

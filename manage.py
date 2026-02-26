@@ -45,11 +45,11 @@ def save_manifest(manifest):
 def list_databases():
     manifest = load_manifest()
     if not manifest:
-        print(f'{C_YELLOW}  Geen databases gevonden.{C_RESET}')
-        print(f'  Voer eerst "Importeer database" uit.\n')
+        print(f'{C_YELLOW}  No databases found.{C_RESET}')
+        print(f'  Run option 2 (Import database) first.\n')
         return manifest
 
-    print(f'\n  {C_BOLD}{"#":<4} {"Naam":<30} {"Bestand":<35} {"Grootte":>10}{C_RESET}')
+    print(f'\n  {C_BOLD}{"#":<4} {"Name":<30} {"File":<35} {"Size":>10}{C_RESET}')
     print(f'  {"─"*80}')
     for i, entry in enumerate(manifest, 1):
         path = BASE_DIR / entry['file']
@@ -58,7 +58,7 @@ def list_databases():
             size_str = f'{size_mb:.1f} MB'
             status = C_GREEN + '✓' + C_RESET
         else:
-            size_str = 'bestand mist'
+            size_str = 'file missing'
             status = C_RED + '✗' + C_RESET
         print(f'  {status} {i:<3} {entry["name"]:<30} {entry["file"]:<35} {size_str:>10}')
     print()
@@ -71,21 +71,21 @@ def delete_database():
         return
 
     try:
-        keuze = input(f'  Welk nummer wil je verwijderen? (0 = annuleren): ').strip()
+        choice = input(f'  Which number do you want to delete? (0 = cancel): ').strip()
     except (KeyboardInterrupt, EOFError):
         print()
         return
 
-    if keuze == '0' or keuze == '':
-        print('  Geannuleerd.\n')
+    if choice == '0' or choice == '':
+        print('  Cancelled.\n')
         return
 
     try:
-        idx = int(keuze) - 1
+        idx = int(choice) - 1
         if idx < 0 or idx >= len(manifest):
             raise ValueError
     except ValueError:
-        print(f'{C_RED}  Ongeldig nummer.{C_RESET}\n')
+        print(f'{C_RED}  Invalid number.{C_RESET}\n')
         return
 
     entry = manifest[idx]
@@ -93,20 +93,20 @@ def delete_database():
     fpath = BASE_DIR / entry['file']
 
     print(f'\n  Database : {C_CYAN}{name}{C_RESET}')
-    print(f'  Bestand  : {entry["file"]}')
+    print(f'  File     : {entry["file"]}')
     if fpath.exists():
         size_mb = fpath.stat().st_size / 1024 / 1024
-        print(f'  Grootte  : {size_mb:.1f} MB')
+        print(f'  Size     : {size_mb:.1f} MB')
     print()
 
     try:
-        confirm = input(f'  {C_RED}Weet je het zeker? Dit kan niet ongedaan worden. (ja/nee): {C_RESET}').strip().lower()
+        confirm = input(f'  {C_RED}Are you sure? This cannot be undone. (yes/no): {C_RESET}').strip().lower()
     except (KeyboardInterrupt, EOFError):
         print()
         return
 
-    if confirm not in ('ja', 'j', 'yes', 'y'):
-        print('  Geannuleerd.\n')
+    if confirm not in ('yes', 'y'):
+        print('  Cancelled.\n')
         return
 
     # Delete the file and WAL/SHM sidecars
@@ -126,8 +126,8 @@ def delete_database():
                 last_err = e
                 time.sleep(0.5)
         if last_err:
-            print(f'{C_RED}  [FOUT] Kan bestand niet verwijderen: {last_err}{C_RESET}')
-            print(f'  Zorg dat de scanner niet actief is en probeer opnieuw.\n')
+            print(f'{C_RED}  [ERROR] Could not delete file: {last_err}{C_RESET}')
+            print(f'  Make sure the scanner is not running and try again.\n')
             return
     else:
         deleted = True  # File already gone, just clean up manifest
@@ -137,9 +137,9 @@ def delete_database():
     save_manifest(new_manifest)
 
     if deleted:
-        print(f'{C_GREEN}  Database "{name}" is verwijderd.{C_RESET}\n')
+        print(f'{C_GREEN}  Database "{name}" has been deleted.{C_RESET}\n')
     else:
-        print(f'{C_YELLOW}  Database "{name}" verwijderd uit lijst (bestand was al weg).{C_RESET}\n')
+        print(f'{C_YELLOW}  Database "{name}" removed from list (file was already gone).{C_RESET}\n')
 
 
 def main():
@@ -150,7 +150,7 @@ def main():
     elif action == 'delete':
         delete_database()
     else:
-        print(f'Gebruik: python manage.py list | delete')
+        print(f'Usage: python manage.py list | delete')
         sys.exit(1)
 
 

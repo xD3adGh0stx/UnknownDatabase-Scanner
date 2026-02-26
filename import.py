@@ -144,9 +144,9 @@ file_size_mb = input_file.stat().st_size / 1024 / 1024
 # ─── Database name ─────────────────────────────────────────────────────────
 db_name = sys.argv[2].strip() if len(sys.argv) >= 3 else ''
 if not db_name:
-    print(f'\n  Bestand  : {input_file.name}')
-    print(f'  Grootte  : {file_size_mb:.1f} MB\n')
-    db_name = input('  Naam voor deze database (bijv. "Odido"): ').strip()
+    print(f'\n  File : {input_file.name}')
+    print(f'  Size : {file_size_mb:.1f} MB\n')
+    db_name = input('  Name for this database (e.g. "Odido"): ').strip()
     if not db_name:
         db_name = 'Database 1'
 
@@ -156,7 +156,7 @@ DB_PATH   = BASE_DIR / safe_file
 # ─── Create database ───────────────────────────────────────────────────────
 if DB_PATH.exists():
     DB_PATH.unlink()
-    print(f'Bestaande {safe_file} verwijderd.')
+    print(f'Removed existing {safe_file}.')
 
 conn = sqlite3.connect(str(DB_PATH))
 c    = conn.cursor()
@@ -329,9 +329,9 @@ try:
     manifest = [e for e in manifest if e['name'] != db_name]
     manifest.append({'name': db_name, 'file': safe_file})
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), 'utf-8')
-    print(f'  databases.json bijgewerkt  ({len(manifest)} database(s) totaal)')
+    print(f'  databases.json updated ({len(manifest)} database(s) total)')
 except Exception as e:
-    print(f'  [WAARSCHUWING] databases.json niet bijgewerkt: {e}')
+    print(f'  [WARNING] databases.json not updated: {e}')
 
-print(f'\n  Dubbelklik op start.bat om de scanner te starten!\n')
+print(f'\n  Run menu.bat and select option 1 to start searching!\n')
 input('Press Enter to exit...')

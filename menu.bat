@@ -27,10 +27,10 @@ for %%V in (314 313 312 311 310) do (
 
 color 0C
 echo.
-echo  [FOUT] Python niet gevonden!
+echo  [ERROR] Python not found!
 echo.
-echo  Download Python via: https://www.python.org/downloads/
-echo  Vink aan: [x] Add Python to PATH
+echo  Download Python from: https://www.python.org/downloads/
+echo  Make sure to check: [x] Add Python to PATH
 echo.
 pause
 exit /b 1
@@ -43,14 +43,14 @@ echo  ==========================================
 echo    UnknownDatabase Scanner
 echo  ==========================================
 echo.
-echo    1.  Scanner starten
-echo    2.  Database importeren
-echo    3.  Database verwijderen
-echo    4.  Database migreren (eenmalig na update)
+echo    1.  Start scanner
+echo    2.  Import database
+echo    3.  Delete database
+echo    4.  Migrate database (one-time after update)
 echo.
-echo    0.  Afsluiten
+echo    0.  Exit
 echo.
-set /p KEUZE=  Keuze:
+set /p KEUZE=  Choice:
 
 if "%KEUZE%"=="1" goto :start_scanner
 if "%KEUZE%"=="2" goto :import_db
@@ -59,7 +59,7 @@ if "%KEUZE%"=="4" goto :migrate_db
 if "%KEUZE%"=="0" goto :exit
 
 echo.
-echo  Ongeldige keuze. Probeer opnieuw.
+echo  Invalid choice. Please try again.
 timeout /t 1 >nul
 goto :menu
 
@@ -68,15 +68,15 @@ goto :menu
 cls
 echo.
 echo  ==========================================
-echo    Scanner starten...
+echo    Starting scanner...
 echo  ==========================================
 echo.
-echo  Browser opent automatisch op http://localhost:3000
-echo  Druk Ctrl+C om de scanner te stoppen.
+echo  Browser will open automatically at http://localhost:3000
+echo  Press Ctrl+C to stop the scanner.
 echo.
 "%PYTHON%" server.py
 echo.
-echo  Scanner gestopt.
+echo  Scanner stopped.
 pause
 goto :menu
 
@@ -85,16 +85,16 @@ goto :menu
 cls
 echo.
 echo  ==========================================
-echo    Database importeren
+echo    Import database
 echo  ==========================================
 echo.
-echo  Sleep een .txt bestand hierop, of geef het pad op.
+echo  Enter the full path to your .txt file.
 echo.
 set "BESTAND="
-set /p BESTAND=  Pad naar bestand:
+set /p BESTAND=  Path to file:
 
 if "%BESTAND%"=="" (
-    echo  Geen pad opgegeven.
+    echo  No path entered.
     pause
     goto :menu
 )
@@ -103,7 +103,7 @@ set BESTAND=%BESTAND:"=%
 
 if not exist "%BESTAND%" (
     echo.
-    echo  [FOUT] Bestand niet gevonden:
+    echo  [ERROR] File not found:
     echo  %BESTAND%
     echo.
     pause
@@ -111,15 +111,15 @@ if not exist "%BESTAND%" (
 )
 
 echo.
-set /p DB_NAME=  Naam voor deze database (bijv. "Odido"):
+set /p DB_NAME=  Name for this database (e.g. "Odido"):
 if "%DB_NAME%"=="" set DB_NAME=Database 1
 
 echo.
-echo  Bestand  : %BESTAND%
+echo  File     : %BESTAND%
 echo  Database : %DB_NAME%
 echo.
-echo  Importeren gestart...
-echo  (Grote bestanden kunnen 10-60 minuten duren - laat dit venster open!)
+echo  Starting import...
+echo  (Large files may take 10-60 minutes - keep this window open!)
 echo.
 "%PYTHON%" import.py "%BESTAND%" "%DB_NAME%"
 echo.
@@ -131,10 +131,10 @@ goto :menu
 cls
 echo.
 echo  ==========================================
-echo    Database verwijderen
+echo    Delete database
 echo  ==========================================
 echo.
-echo  LET OP: Zorg dat de scanner (optie 1) niet actief is!
+echo  NOTE: Make sure the scanner (option 1) is not running!
 echo.
 "%PYTHON%" manage.py delete
 pause
@@ -145,38 +145,38 @@ goto :menu
 cls
 echo.
 echo  ==========================================
-echo    Database migreren
+echo    Migrate database
 echo  ==========================================
 echo.
-echo  Dit repareert een bestaande database:
-echo    - Voegt IBAN kolom toe
-echo    - Extraheert telefoonnummers uit logs
-echo    - Maakt nieuwe indexes aan
+echo  This repairs an existing database:
+echo    - Adds IBAN column
+echo    - Extracts phone numbers from activity logs
+echo    - Rebuilds indexes
 echo.
 
 "%PYTHON%" manage.py list
 
-set /p MIG_DB=  Naam van de database om te migreren (Enter = database.db):
+set /p MIG_DB=  Name of the database to migrate (Enter = database.db):
 if "%MIG_DB%"=="" (
     if not exist "%~dp0database.db" (
         echo.
-        echo  [FOUT] database.db niet gevonden. Importeer eerst een database.
+        echo  [ERROR] database.db not found. Import a database first.
         pause
         goto :menu
     )
     "%PYTHON%" migrate.py
 ) else (
     :: Find the file for this database name
-    "%PYTHON%" -c "import json,sys,pathlib; m=json.loads(pathlib.Path('databases.json').read_text('utf-8')); e=next((x for x in m if x['name']==sys.argv[1]),None); sys.exit(0 if e else 1); print(e['file'])" "%MIG_DB%" >nul 2>nul
+    "%PYTHON%" -c "import json,sys,pathlib; m=json.loads(pathlib.Path('databases.json').read_text('utf-8')); e=next((x for x in m if x['name']==sys.argv[1]),None); sys.exit(0 if e else 1)" "%MIG_DB%" >nul 2>nul
     if %ERRORLEVEL% NEQ 0 (
         echo.
-        echo  [FOUT] Database niet gevonden: %MIG_DB%
+        echo  [ERROR] Database not found: %MIG_DB%
         pause
         goto :menu
     )
     for /f "delims=" %%F in ('"%PYTHON%" -c "import json,sys,pathlib; m=json.loads(pathlib.Path('databases.json').read_text('utf-8')); e=next((x for x in m if x['name']==sys.argv[1]),None); print(e['file'] if e else '')" "%MIG_DB%"') do set DB_FILE=%%F
     if "%DB_FILE%"=="" (
-        echo  [FOUT] Bestand niet gevonden voor database: %MIG_DB%
+        echo  [ERROR] File not found for database: %MIG_DB%
         pause
         goto :menu
     )

@@ -34,7 +34,7 @@ def load_manifest():
         manifest = [{'name': 'Database 1', 'file': 'database.db'}]
         MANIFEST_PATH.write_text(
             json.dumps(manifest, indent=2, ensure_ascii=False), 'utf-8')
-        print('  [INFO] databases.json aangemaakt van bestaande database.db')
+        print('  [INFO] databases.json created from existing database.db')
         return manifest
     return []
 
@@ -46,8 +46,8 @@ def save_manifest(manifest):
 DATABASES = load_manifest()
 
 if not DATABASES:
-    print('\n[ERROR] Geen databases gevonden.')
-    print('Voer import.bat uit om een database aan te maken.\n')
+    print('\n[ERROR] No databases found.')
+    print('Run menu.bat and choose option 2 to import a database.\n')
     input('Press Enter to exit...')
     sys.exit(1)
 
@@ -66,14 +66,14 @@ _DB_INFO  = {}   # name -> {path, cols, has_iban}
 _DB_ORDER = []   # ordered list of db names
 
 print(f'\n{"==="*15}')
-print(f'  UnknownDatabase Scanner - Databases')
+print(f'  UnknownDatabase Scanner - Loading databases')
 print(f'{"==="*15}')
 
 for _entry in DATABASES:
     _name = _entry['name']
     _path = BASE_DIR / _entry['file']
     if not _path.exists():
-        print(f'  [WAARSCHUWING] Bestand niet gevonden: {_path}')
+        print(f'  [WARNING] File not found: {_path}')
         continue
     _cols_set = _detect_columns(_path)
     _has_iban = 'iban' in _cols_set
@@ -83,10 +83,10 @@ for _entry in DATABASES:
         'has_iban': _has_iban,
     }
     _DB_ORDER.append(_name)
-    print(f'  "{_name}"  ({_entry["file"]})  IBAN: {"ja" if _has_iban else "nee"}')
+    print(f'  "{_name}"  ({_entry["file"]})  IBAN: {"yes" if _has_iban else "no"}')
 
 if not _DB_INFO:
-    print('\n[ERROR] Geen bruikbare databases gevonden.')
+    print('\n[ERROR] No usable databases found.')
     input('Press Enter to exit...')
     sys.exit(1)
 
@@ -393,11 +393,11 @@ class Handler(BaseHTTPRequestHandler):
         old_name = old_name.strip()
         new_name = new_name.strip()
         if not old_name or not new_name:
-            return self.send_json({'error': 'Naam ontbreekt'}, 400)
+            return self.send_json({'error': 'Name missing'}, 400)
         if new_name == old_name:
             return self.send_json({'ok': True})
         if new_name in _DB_INFO:
-            return self.send_json({'error': 'Die naam bestaat al'}, 409)
+            return self.send_json({'error': 'That name already exists'}, 409)
 
         manifest = load_manifest()
         found    = False
@@ -407,7 +407,7 @@ class Handler(BaseHTTPRequestHandler):
                 found = True
                 break
         if not found:
-            return self.send_json({'error': 'Database niet gevonden'}, 404)
+            return self.send_json({'error': 'Database not found'}, 404)
 
         save_manifest(manifest)
         DATABASES = manifest
@@ -424,12 +424,12 @@ class Handler(BaseHTTPRequestHandler):
         global DATABASES, _DB_ORDER
         name = name.strip()
         if not name:
-            return self.send_json({'error': 'Naam ontbreekt'}, 400)
+            return self.send_json({'error': 'Name missing'}, 400)
 
         manifest = load_manifest()
         entry    = next((e for e in manifest if e['name'] == name), None)
         if not entry:
-            return self.send_json({'error': 'Database niet gevonden'}, 404)
+            return self.send_json({'error': 'Database not found'}, 404)
 
         db_path = BASE_DIR / entry['file']
 
@@ -457,7 +457,7 @@ class Handler(BaseHTTPRequestHandler):
                     last_err = e
                     time.sleep(0.5)
             if last_err:
-                return self.send_json({'error': f'Kan bestand niet verwijderen: {last_err}'}, 500)
+                return self.send_json({'error': f'Could not delete file: {last_err}'}, 500)
 
         manifest = [e for e in manifest if e['name'] != name]
         save_manifest(manifest)
