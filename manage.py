@@ -25,12 +25,16 @@ def load_manifest():
         try:
             data = json.loads(MANIFEST_PATH.read_text('utf-8'))
             if isinstance(data, list):
+                # Add default version=1 for old databases
+                for entry in data:
+                    if 'version' not in entry:
+                        entry['version'] = 1
                 return data
         except Exception:
             pass
     legacy = BASE_DIR / 'database.db'
     if legacy.exists():
-        manifest = [{'name': 'Database 1', 'file': 'database.db'}]
+        manifest = [{'name': 'Database 1', 'file': 'database.db', 'version': 1}]
         MANIFEST_PATH.write_text(
             json.dumps(manifest, indent=2, ensure_ascii=False), 'utf-8')
         return manifest

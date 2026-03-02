@@ -18,6 +18,7 @@
     --green:    #4caf7d;
     --red:      #f25f5c;
     --orange:   #f7a44f;
+    --purple:   #a78bfa;
     --row-hover:#21253a;
     --shadow:   0 4px 24px rgba(0,0,0,.5);
   }
@@ -30,51 +31,92 @@
     min-height: 100vh;
   }
 
-  /* ── Header ────────────────────────────────────────────── */
+  /* ── Header ────────────────────────────────────────────────── */
   header {
     background: linear-gradient(135deg, #1a1d27 0%, #12152080 100%);
     border-bottom: 1px solid var(--border);
-    padding: 20px 32px;
+    padding: 14px 24px;
     display: flex;
     align-items: center;
     gap: 16px;
+    flex-wrap: wrap;
   }
-  header h1 {
-    font-size: 20px;
+  .brand h1 {
+    font-size: 18px;
     font-weight: 600;
-    letter-spacing: .5px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
+  .brand span { font-size: 11px; color: var(--sub); }
+
+  /* ── Tab navigation ─────────────────────────────────────────── */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .tab-btn {
+    padding: 7px 18px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--sub);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
   #stats-badge {
-    margin-left: auto;
     font-size: 12px;
     color: var(--sub);
     background: var(--border);
     padding: 4px 12px;
     border-radius: 20px;
+    white-space: nowrap;
   }
+  #manage-db-btn {
+    margin-left: auto;
+    padding: 6px 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--sub);
+    font-size: 12px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s;
+  }
+  #manage-db-btn:hover { color: var(--text); border-color: var(--accent); }
 
-  /* ── Search area ────────────────────────────────────────── */
+  /* ── Page containers ────────────────────────────────────────── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Search area ────────────────────────────────────────────── */
   .search-wrap {
-    padding: 24px 32px 16px;
+    padding: 20px 28px 14px;
     max-width: 1400px;
     margin: 0 auto;
   }
-
   .search-row {
     display: flex;
     gap: 10px;
     align-items: center;
     flex-wrap: wrap;
   }
-
   #search-input {
     flex: 1;
     min-width: 260px;
-    padding: 12px 18px;
+    padding: 11px 16px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -85,9 +127,8 @@
   }
   #search-input:focus { border-color: var(--accent); }
   #search-input::placeholder { color: var(--sub); }
-
   #field-select {
-    padding: 12px 14px;
+    padding: 11px 14px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -97,9 +138,8 @@
     outline: none;
   }
   #field-select:focus { border-color: var(--accent); }
-
-  #search-btn {
-    padding: 12px 26px;
+  .btn-primary {
+    padding: 11px 24px;
     background: var(--accent);
     color: #fff;
     border: none;
@@ -108,12 +148,12 @@
     font-weight: 600;
     cursor: pointer;
     transition: background .2s, transform .1s;
+    white-space: nowrap;
   }
-  #search-btn:hover  { background: #3a78e0; }
-  #search-btn:active { transform: scale(.97); }
-
-  #clear-btn {
-    padding: 12px 16px;
+  .btn-primary:hover  { background: #3a78e0; }
+  .btn-primary:active { transform: scale(.97); }
+  .btn-secondary {
+    padding: 11px 16px;
     background: var(--panel);
     color: var(--sub);
     border: 1px solid var(--border);
@@ -121,24 +161,25 @@
     font-size: 13px;
     cursor: pointer;
     transition: color .2s;
+    white-space: nowrap;
   }
-  #clear-btn:hover { color: var(--text); }
+  .btn-secondary:hover { color: var(--text); }
 
-  /* ── Results info bar ────────────────────────────────────── */
+  /* ── Results bar ─────────────────────────────────────────────── */
   .results-bar {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 8px 32px 12px;
+    padding: 6px 28px 10px;
     display: flex;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    min-height: 36px;
+    min-height: 34px;
   }
-  #result-info { color: var(--sub); font-size: 13px; }
-  #export-btn {
+  .result-info { color: var(--sub); font-size: 13px; }
+  .export-btn {
     margin-left: auto;
-    padding: 6px 14px;
+    padding: 5px 13px;
     background: transparent;
     color: var(--accent);
     border: 1px solid var(--accent);
@@ -148,16 +189,15 @@
     transition: background .2s;
     display: none;
   }
-  #export-btn:hover { background: rgba(79,142,247,.1); }
+  .export-btn:hover { background: rgba(79,142,247,.1); }
 
-  /* ── Table ───────────────────────────────────────────────── */
+  /* ── Table ───────────────────────────────────────────────────── */
   .table-wrap {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 32px 32px;
+    padding: 0 28px 28px;
     overflow-x: auto;
   }
-
   table {
     width: 100%;
     border-collapse: collapse;
@@ -168,9 +208,9 @@
   }
   thead th {
     background: #21253a;
-    padding: 12px 14px;
+    padding: 11px 13px;
     text-align: left;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--sub);
     text-transform: uppercase;
@@ -186,7 +226,7 @@
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: var(--row-hover); }
   tbody td {
-    padding: 10px 14px;
+    padding: 10px 13px;
     max-width: 220px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -196,7 +236,7 @@
 
   .badge {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 2px 7px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 600;
@@ -204,236 +244,6 @@
   .badge-active   { background: rgba(76,175,125,.15); color: var(--green); }
   .badge-inactive { background: rgba(242,95,92,.12);  color: var(--red);   }
   .badge-other    { background: rgba(140,143,168,.12); color: var(--sub);  }
-
-  /* ── Pagination ──────────────────────────────────────────── */
-  #pagination {
-    max-width: 1400px;
-    margin: 16px auto 0;
-    padding: 0 32px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .page-btn {
-    padding: 7px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 13px;
-    transition: background .15s, border-color .15s;
-  }
-  .page-btn:hover         { background: var(--row-hover); border-color: var(--accent); }
-  .page-btn.active        { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  .page-btn:disabled      { opacity: .3; cursor: default; }
-  #page-info { color: var(--sub); font-size: 13px; margin-left: 4px; }
-
-  /* ── States ──────────────────────────────────────────────── */
-  #empty-state {
-    text-align: center;
-    padding: 80px 32px;
-    color: var(--sub);
-    display: none;
-  }
-  #empty-state .icon { font-size: 48px; margin-bottom: 16px; }
-  #empty-state h2    { font-size: 18px; color: var(--text); margin-bottom: 8px; }
-
-  #loader {
-    text-align: center;
-    padding: 60px;
-    color: var(--sub);
-    display: none;
-  }
-  .spinner {
-    width: 32px; height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    margin: 0 auto 16px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Modal ───────────────────────────────────────────────── */
-  #modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.7);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    backdrop-filter: blur(4px);
-  }
-  #modal-overlay.open { display: flex; }
-
-  #modal {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    width: 92vw;
-    max-width: 860px;
-    max-height: 88vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,.7);
-    animation: slideUp .2s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } }
-
-  #modal-header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  #modal-title { font-size: 17px; font-weight: 600; flex: 1; }
-  #modal-close {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: var(--border);
-    color: var(--sub);
-    font-size: 18px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
-  }
-  #modal-close:hover { background: var(--red); color: #fff; }
-
-  #modal-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 24px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-
-  .field-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 10px;
-  }
-  .field-item {
-    background: rgba(255,255,255,.03);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    overflow: hidden;
-  }
-  .field-label {
-    font-size: 10px;
-    color: var(--sub);
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-  .field-value {
-    font-size: 13px;
-    color: var(--text);
-    word-break: break-all;
-  }
-  .field-value.empty { color: var(--sub); font-style: italic; }
-
-  .section-title {
-    font-size: 11px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: 700;
-    margin: 18px 0 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
-    grid-column: 1 / -1;
-  }
-
-  /* ── Welcome screen ──────────────────────────────────────── */
-  #welcome {
-    max-width: 600px;
-    margin: 60px auto;
-    text-align: center;
-    padding: 0 32px;
-  }
-  #welcome .logo { font-size: 56px; margin-bottom: 20px; }
-  #welcome h2 { font-size: 22px; margin-bottom: 10px; }
-  #welcome p  { color: var(--sub); line-height: 1.6; }
-  .search-tips {
-    margin-top: 32px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    text-align: left;
-  }
-  .tip {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .tip .tip-icon  { font-size: 20px; margin-bottom: 6px; }
-  .tip .tip-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .tip .tip-text  { font-size: 12px; color: var(--sub); }
-
-  /* ── Log timeline ────────────────────────────────────────── */
-  .log-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 500px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
-  .log-entry {
-    background: rgba(255,255,255,.03);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-  .log-entry.log-warn {
-    background: rgba(242,95,92,.07);
-    border-color: rgba(242,95,92,.35);
-  }
-  .log-entry.log-sms {
-    background: rgba(79,142,247,.06);
-    border-color: rgba(79,142,247,.3);
-  }
-  .log-meta {
-    font-size: 11px;
-    color: var(--sub);
-    margin-bottom: 3px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .log-dir {
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .log-dir-in  { background: rgba(76,175,125,.15); color: var(--green); }
-  .log-dir-out { background: rgba(79,142,247,.15);  color: var(--accent); }
-  .log-dir-sys { background: rgba(140,143,168,.12); color: var(--sub); }
-  .log-warn-tag {
-    color: var(--red);
-    font-weight: 700;
-    font-size: 11px;
-  }
-  .log-text {
-    color: var(--text);
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  /* ── Warning badge in table ───────────────────────────────── */
   .badge-warn {
     background: rgba(242,95,92,.12);
     color: var(--red);
@@ -444,7 +254,17 @@
     margin-left: 4px;
     vertical-align: middle;
   }
-  .badge-note {
+  .badge-dead {
+    background: rgba(140,143,168,.2);
+    color: #aaa;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .badge-summon {
     background: rgba(247,164,79,.12);
     color: var(--orange);
     font-size: 10px;
@@ -454,40 +274,6 @@
     margin-left: 4px;
     vertical-align: middle;
   }
-
-  /* ── Database filter chips ───────────────────────────────── */
-  #db-filter {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 32px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    display: none; /* shown only when >1 database */
-  }
-  #db-filter .filter-label {
-    font-size: 11px;
-    color: var(--sub);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    margin-right: 2px;
-  }
-  .db-chip {
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: opacity .15s, transform .1s;
-    user-select: none;
-  }
-  .db-chip.off { opacity: .35; }
-  .db-chip:hover { transform: scale(1.04); }
-
-  /* ── Database badge in table ─────────────────────────────── */
   .badge-db {
     font-size: 10px;
     font-weight: 700;
@@ -498,7 +284,624 @@
     opacity: .9;
   }
 
-  /* ── Database management modal ───────────────────────────── */
+  /* ── Pagination ──────────────────────────────────────────────── */
+  .pager {
+    max-width: 1400px;
+    margin: 14px auto 0;
+    padding: 0 28px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .page-btn {
+    padding: 6px 13px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    transition: background .15s, border-color .15s;
+  }
+  .page-btn:hover       { background: var(--row-hover); border-color: var(--accent); }
+  .page-btn.active      { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  .page-btn:disabled    { opacity: .3; cursor: default; }
+  .page-info            { color: var(--sub); font-size: 13px; margin-left: 4px; }
+
+  /* ── States ──────────────────────────────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 70px 28px;
+    color: var(--sub);
+    display: none;
+  }
+  .empty-state .icon { font-size: 44px; margin-bottom: 14px; }
+  .empty-state h2    { font-size: 17px; color: var(--text); margin-bottom: 8px; }
+  .loader {
+    text-align: center;
+    padding: 60px;
+    color: var(--sub);
+    display: none;
+  }
+  .spinner {
+    width: 30px; height: 30px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Welcome screen ──────────────────────────────────────────── */
+  #welcome {
+    max-width: 600px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 0 28px;
+  }
+  #welcome .logo { font-size: 52px; margin-bottom: 18px; }
+  #welcome h2 { font-size: 21px; margin-bottom: 10px; }
+  #welcome p  { color: var(--sub); line-height: 1.6; }
+  .search-tips {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    text-align: left;
+  }
+  .tip {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .tip .tip-icon  { font-size: 18px; margin-bottom: 5px; }
+  .tip .tip-title { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+  .tip .tip-text  { font-size: 11px; color: var(--sub); }
+
+  /* ── Database filter chips ───────────────────────────────────── */
+  #db-filter {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 28px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    display: none;
+  }
+  #db-filter .filter-label {
+    font-size: 11px;
+    color: var(--sub);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+  }
+  .db-chip {
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: opacity .15s, transform .1s;
+    user-select: none;
+  }
+  .db-chip.off  { opacity: .35; }
+  .db-chip:hover { transform: scale(1.04); }
+
+  /* ══ OVERVIEW PAGE ══════════════════════════════════════════════ */
+  .ov-wrap {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 28px 8px;
+  }
+  .ov-filter-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .ov-filter-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 12px;
+  }
+  .ov-filter-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .ov-filter-row:last-child { margin-bottom: 0; }
+  /* ── Filter toggle with count badge ──────────────────────────────────── */
+  .filter-toggle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .filter-count {
+    font-size: 10px;
+    color: var(--sub);
+    font-weight: 600;
+    letter-spacing: .3px;
+    height: 14px;
+    transition: color .3s;
+  }
+  .filter-count.ready { color: #6b7280; }
+  .filter-toggle {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--sub);
+    transition: all .15s;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .filter-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .filter-toggle.on {
+    background: rgba(79,142,247,.18);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .filter-toggle[data-filter="has_iban"].on       { background: rgba(76,175,125,.15); border-color: var(--green);  color: var(--green); }
+  .filter-toggle[data-filter="has_password"].on   { background: rgba(167,139,250,.15); border-color: var(--purple); color: var(--purple); }
+  .filter-toggle[data-filter="has_notes"].on      { background: rgba(79,142,247,.15);  border-color: var(--accent); color: var(--accent); }
+  .filter-toggle[data-filter="has_summons"].on    { background: rgba(247,164,79,.15);  border-color: var(--orange); color: var(--orange); }
+  .filter-toggle[data-filter="is_deceased"].on    { background: rgba(140,143,168,.2);  border-color: #888; color: #ccc; }
+  .filter-toggle[data-filter="is_active"].on      { background: rgba(76,175,125,.15);  border-color: var(--green);  color: var(--green); }
+  .filter-toggle[data-filter="is_inactive"].on    { background: rgba(242,95,92,.12);   border-color: var(--red);    color: var(--red); }
+  .filter-toggle[data-filter="has_kvk"].on         { background: rgba(251,191,36,.12);  border-color: #f59e0b;       color: #f59e0b; }
+  .filter-toggle[data-filter="has_pincode"].on     { background: rgba(167,139,250,.12); border-color: var(--purple); color: var(--purple); }
+  .filter-toggle[data-filter="has_id_doc"].on      { background: rgba(56,189,248,.12);  border-color: #38bdf8;       color: #38bdf8; }
+  .filter-toggle[data-filter="has_bsn"].on         { background: rgba(251,191,36,.08);  border-color: #d97706;       color: #d97706; }
+  .ov-divider { color: var(--border); font-size: 18px; }
+  .city-select-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .city-select-wrap label { font-size: 12px; color: var(--sub); font-weight: 600; }
+  #city-select {
+    padding: 7px 12px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    min-width: 160px;
+    font-weight: 600;
+  }
+  #city-select:focus { border-color: var(--accent); }
+  #city-select option { background: var(--panel); }
+  .sort-select-wrap { display: flex; align-items: center; gap: 8px; }
+  .sort-select-wrap label { font-size: 12px; color: var(--sub); font-weight: 600; }
+  #sort-select {
+    padding: 7px 12px;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    font-weight: 600;
+  }
+  #sort-select:focus { border-color: var(--accent); }
+  #ov-reset-btn {
+    padding: 7px 14px;
+    background: transparent;
+    color: var(--sub);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color .15s;
+  }
+  #ov-reset-btn:hover { color: var(--red); border-color: var(--red); }
+
+  /* ── OV empty/intro ──────────────────────────────────────────── */
+  #ov-intro {
+    text-align: center;
+    padding: 50px 28px;
+    color: var(--sub);
+  }
+  #ov-intro .icon { font-size: 44px; margin-bottom: 14px; }
+  #ov-intro h2 { font-size: 17px; color: var(--text); margin-bottom: 10px; }
+  #ov-intro p { max-width: 420px; margin: 0 auto; line-height: 1.6; font-size: 13px; }
+  .ov-hint-grid {
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .ov-hint {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--sub);
+    text-align: left;
+  }
+  .ov-hint strong { color: var(--text); display: block; margin-bottom: 3px; }
+
+  /* ══ MODAL ══════════════════════════════════════════════════════ */
+  #modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+  #modal-overlay.open { display: flex; }
+  #modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 96vw;
+    max-width: 980px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7);
+    animation: slideUp .2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } }
+  #modal-header {
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  #modal-title { font-size: 16px; font-weight: 600; flex: 1; }
+  #modal-close {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--border);
+    color: var(--sub);
+    font-size: 17px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  #modal-close:hover { background: var(--red); color: #fff; }
+  #modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 22px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* ── Person card ─────────────────────────────────────────────── */
+  .person-card {
+    background: rgba(79,142,247,.06);
+    border: 1px solid rgba(79,142,247,.25);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+  }
+  .person-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .person-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .person-badge {
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid currentColor;
+  }
+
+  /* ── Info two-column grid ────────────────────────────────────── */
+  .info-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 600px) { .info-2col { grid-template-columns: 1fr; } }
+  .info-section {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .info-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .info-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label {
+    color: var(--sub);
+    font-size: 11px;
+    white-space: nowrap;
+    padding-top: 1px;
+    min-width: 90px;
+  }
+  .info-val {
+    color: var(--text);
+    word-break: break-word;
+    flex: 1;
+  }
+  .info-val.mono { font-family: monospace; font-size: 12px; }
+  .info-val.empty { color: var(--sub); font-style: italic; }
+  .info-val.big {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* ── Special sections ────────────────────────────────────────── */
+  .special-section {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+  .special-section.warn {
+    background: rgba(242,95,92,.1);
+    border: 2px solid rgba(242,95,92,.5);
+  }
+  .special-section.dead {
+    background: rgba(120,120,130,.1);
+    border: 2px solid rgba(120,120,130,.4);
+  }
+  .special-section.summons {
+    background: rgba(247,164,79,.1);
+    border: 2px solid rgba(247,164,79,.45);
+  }
+  .special-section.password {
+    background: rgba(167,139,250,.1);
+    border: 2px solid rgba(167,139,250,.45);
+  }
+  .special-section.iddoc {
+    background: rgba(56,189,248,.08);
+    border: 2px solid rgba(56,189,248,.35);
+  }
+  .special-section.bsn {
+    background: rgba(99,102,241,.1);
+    border: 2px solid rgba(99,102,241,.45);
+  }
+  .special-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .special-section.warn    .special-title { color: var(--red); }
+  .special-section.dead    .special-title { color: #bbb; }
+  .special-section.summons .special-title { color: var(--orange); }
+  .special-section.password .special-title { color: var(--purple); }
+  .special-section.iddoc   .special-title { color: #38bdf8; }
+  .special-section.bsn     .special-title { color: #818cf8; }
+  .special-text {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .special-section.warn     .special-text { color: #f09090; }
+  .special-section.dead     .special-text { color: #ccc; }
+  .special-section.summons  .special-text { color: #e8bb80; }
+  .special-section.password .special-text { color: #c4b0ff; }
+  .special-section.iddoc    .special-text { color: #a0d8ef; }
+  .special-section.bsn      .special-text { color: #c7d2fe; }
+
+  /* ── Log timeline ────────────────────────────────────────────── */
+  .log-section {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .log-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .log-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .log-entry {
+    background: rgba(255,255,255,.025);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 0 6px 6px 0;
+    overflow: hidden;
+  }
+  .log-entry.log-warn { border-left-color: var(--red);    background: rgba(242,95,92,.06); }
+  .log-entry.log-dead { border-left-color: #666;          background: rgba(100,100,110,.1); }
+  .log-entry.log-sms  { border-left-color: var(--accent); background: rgba(79,142,247,.05); }
+  .log-entry.log-sum  { border-left-color: var(--orange); background: rgba(247,164,79,.06); }
+  .log-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,.02);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    flex-wrap: wrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  .log-header:hover { background: rgba(255,255,255,.05); }
+  .log-date {
+    font-size: 11px;
+    color: var(--sub);
+    font-family: monospace;
+    white-space: nowrap;
+  }
+  .log-dir {
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .log-dir-in  { background: rgba(76,175,125,.2);  color: var(--green); }
+  .log-dir-out { background: rgba(79,142,247,.2);  color: var(--accent); }
+  .log-dir-sys { background: rgba(140,143,168,.15); color: var(--sub); }
+  .log-agent {
+    font-size: 11px;
+    color: var(--sub);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .log-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .log-tag-warn { background: rgba(242,95,92,.2);  color: var(--red); }
+  .log-tag-dead { background: rgba(140,140,150,.2); color: #ccc; }
+  .log-tag-sum  { background: rgba(247,164,79,.2);  color: var(--orange); }
+  .log-tag-sms  { background: rgba(79,142,247,.2);  color: var(--accent); }
+  .log-tag-doc  { background: rgba(56,189,248,.2);  color: #38bdf8; }
+  .log-chevron  { font-size: 10px; color: var(--sub); margin-left: auto; flex-shrink: 0; transition: transform .15s; }
+  .log-entry.expanded .log-chevron { transform: rotate(180deg); }
+  .log-body {
+    padding: 8px 10px;
+    display: none;
+  }
+  .log-entry.expanded .log-body { display: block; }
+  .log-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .log-show-more {
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    border-top: 1px solid var(--border);
+  }
+  .log-show-more:hover { background: rgba(79,142,247,.08); }
+
+  /* ── Collapsible "all fields" ────────────────────────────────── */
+  .collapse-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 11px 16px;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--sub);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .collapse-toggle:hover { background: var(--row-hover); color: var(--text); }
+  .collapse-toggle .chevron { margin-left: auto; transition: transform .2s; }
+  .collapse-toggle.open .chevron { transform: rotate(180deg); }
+  .collapse-content { display: none; }
+  .collapse-content.open { display: block; }
+
+  /* ── Field grid (all fields) ─────────────────────────────────── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 8px;
+  }
+  .field-item {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 13px;
+    overflow: hidden;
+  }
+  .field-label {
+    font-size: 10px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    margin-bottom: 3px;
+    font-weight: 600;
+  }
+  .field-value {
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-all;
+  }
+  .field-value.empty { color: var(--sub); font-style: italic; }
+  .section-title {
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin: 14px 0 6px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border);
+    grid-column: 1 / -1;
+  }
+
+  /* ── DB management modal ─────────────────────────────────────── */
   #db-modal-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,.7);
@@ -514,7 +917,7 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     width: 92vw;
-    max-width: 560px;
+    max-width: 540px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -522,25 +925,25 @@
     animation: slideUp .2s ease;
   }
   #db-modal-header {
-    padding: 18px 22px 14px;
+    padding: 16px 20px 13px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  #db-modal-title { font-size: 16px; font-weight: 600; flex: 1; }
+  #db-modal-title { font-size: 15px; font-weight: 600; flex: 1; }
   #db-modal-close {
-    width: 30px; height: 30px;
+    width: 28px; height: 28px;
     border-radius: 50%; border: none;
     background: var(--border); color: var(--sub);
-    font-size: 16px; cursor: pointer;
+    font-size: 15px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background .15s;
   }
   #db-modal-close:hover { background: var(--red); color: #fff; }
   #db-modal-body {
     flex: 1; overflow-y: auto;
-    padding: 16px 22px 20px;
+    padding: 14px 20px 18px;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
@@ -548,24 +951,17 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 12px;
+    padding: 10px 11px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
     background: rgba(255,255,255,.02);
   }
-  .db-row-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .db-row-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
   .db-row-info { flex: 1; min-width: 0; }
-  .db-row-name {
-    font-size: 13px; font-weight: 600;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
+  .db-row-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .db-row-meta { font-size: 11px; color: var(--sub); margin-top: 2px; }
-  .db-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .db-row-actions { display: flex; gap: 5px; flex-shrink: 0; }
   .db-btn {
     padding: 5px 10px;
     border-radius: 6px;
@@ -581,8 +977,8 @@
   .db-btn.danger { color: var(--red); border-color: rgba(242,95,92,.3); }
   .db-btn.danger:hover { background: rgba(242,95,92,.1); }
   .db-add-note {
-    margin-top: 14px;
-    padding: 12px 14px;
+    margin-top: 12px;
+    padding: 11px 13px;
     background: rgba(79,142,247,.06);
     border: 1px solid rgba(79,142,247,.2);
     border-radius: 8px;
@@ -591,269 +987,434 @@
     line-height: 1.6;
   }
 
-  /* ── Manage button in header ──────────────────────────────── */
-  #manage-db-btn {
-    padding: 6px 14px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--sub);
-    font-size: 12px;
-    cursor: pointer;
-    transition: color .15s, border-color .15s;
-    margin-left: 8px;
-  }
-  #manage-db-btn:hover { color: var(--text); border-color: var(--accent); }
-
-  /* ── Responsive ──────────────────────────────────────────── */
+  /* ── Responsive ──────────────────────────────────────────────── */
   @media (max-width: 700px) {
-    header, .search-wrap, .results-bar, .table-wrap, #pagination { padding-left: 16px; padding-right: 16px; }
-    #db-filter { padding-left: 16px; padding-right: 16px; }
+    header, .search-wrap, .results-bar, .table-wrap, .pager,
+    .ov-wrap { padding-left: 14px; padding-right: 14px; }
+    #db-filter { padding-left: 14px; padding-right: 14px; }
     .search-tips { grid-template-columns: 1fr; }
-    #modal { width: 98vw; border-radius: 12px; }
-    #db-modal { width: 98vw; border-radius: 12px; }
+    #modal { width: 99vw; border-radius: 10px; }
   }
 </style>
 </head>
 <body>
 
-<!-- ── Header ─────────────────────────────────────────────────────────── -->
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
 <header>
-  <div style="display:flex;flex-direction:column;gap:2px">
+  <div class="brand">
     <h1>UnknownDatabase Scanner</h1>
-    <span style="font-size:11px;color:var(--sub)">Local database search</span>
+    <span>Local database search engine</span>
   </div>
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="search">🔍 Search</button>
+    <button class="tab-btn" data-tab="overview">📋 Overview</button>
+  </nav>
   <span id="stats-badge">Loading...</span>
-  <button id="manage-db-btn" title="Manage databases">&#9776; Databases</button>
+  <button id="manage-db-btn" title="Manage Databases">⚙ Databases</button>
 </header>
 
-<!-- ── Search ─────────────────────────────────────────────────────────── -->
-<div class="search-wrap">
-  <div class="search-row">
-    <input id="search-input" type="text" placeholder="Search by name, address, phone, email, IBAN..." autocomplete="off" spellcheck="false">
-    <select id="field-select">
-      <option value="all">All fields</option>
-      <option value="name">Name</option>
-      <option value="phone">Phone</option>
-      <option value="email">Email</option>
-      <option value="iban">IBAN</option>
-      <option value="city">City</option>
-      <option value="postal">Postal code</option>
-      <option value="street">Street</option>
-      <option value="id">Customer ID</option>
-      <option value="notes">Notes / Log</option>
-    </select>
-    <button id="search-btn">Search</button>
-    <button id="clear-btn">Clear</button>
-  </div>
-</div>
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE: ZOEKEN
+     ════════════════════════════════════════════════════════════════════════ -->
+<div id="page-search" class="page active">
 
-<!-- ── Database filter ────────────────────────────────────────────────── -->
-<div id="db-filter">
-  <span class="filter-label">Filter:</span>
-</div>
-
-<!-- ── Results bar ─────────────────────────────────────────────────────── -->
-<div class="results-bar">
-  <span id="result-info"></span>
-  <button id="export-btn">Export CSV</button>
-</div>
-
-<!-- ── Table / States ──────────────────────────────────────────────────── -->
-<div class="table-wrap">
-
-  <div id="loader">
-    <div class="spinner"></div>
-    Searching...
+  <!-- Search form -->
+  <div class="search-wrap">
+    <div class="search-row">
+      <input id="search-input" type="text"
+        placeholder="Search by name, address, phone, email, IBAN..."
+        autocomplete="off" spellcheck="false">
+      <select id="field-select">
+        <option value="all">All fields</option>
+        <option value="name">Name</option>
+        <option value="phone">Phone number</option>
+        <option value="email">Email address</option>
+        <option value="iban">IBAN</option>
+        <option value="id_number">ID Number (Passport/DL)</option>
+        <option value="city">City / Town</option>
+        <option value="postal">Postal code</option>
+        <option value="street">Street name</option>
+        <option value="id">Customer ID</option>
+        <option value="notes">Notes / Log</option>
+      </select>
+      <button class="btn-primary" id="search-btn">Search</button>
+      <button class="btn-secondary" id="clear-btn">Clear</button>
+    </div>
   </div>
 
-  <div id="empty-state">
-    <div class="icon">🔍</div>
-    <h2 id="empty-title">No results found</h2>
-    <p id="empty-sub">Try a different search term or field.</p>
+  <!-- DB filter chips (only when >1 DB) -->
+  <div id="db-filter">
+    <span class="filter-label">Filter:</span>
   </div>
 
-  <div id="welcome">
-    <div class="logo">🗄️</div>
-    <h2>Welcome to UnknownDatabase Scanner</h2>
-    <p>Type a search term to look up records. You can search by name, phone, email, IBAN, postal code, street or customer ID.</p>
-    <div class="search-tips">
-      <div class="tip">
-        <div class="tip-icon">👤</div>
-        <div class="tip-title">By name</div>
-        <div class="tip-text">Select "Name" and type a first or last name</div>
+  <!-- Results bar -->
+  <div class="results-bar">
+    <span class="result-info" id="result-info"></span>
+    <button class="export-btn" id="export-btn">📥 Export CSV</button>
+  </div>
+
+  <!-- Table / States -->
+  <div class="table-wrap">
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      Zoeken...
+    </div>
+    <div class="empty-state" id="empty-state">
+      <div class="icon">🔍</div>
+      <h2 id="empty-title">No results found</h2>
+      <p id="empty-sub">Try a different search term or select another field.</p>
+    </div>
+    <div id="welcome">
+      <div class="logo">🗄️</div>
+      <h2>Welcome to UnknownDatabase Scanner</h2>
+      <p>Type a search term to look up records. You can search by name, phone, email, IBAN, postal code, street, or customer ID.</p>
+      <div class="search-tips">
+        <div class="tip">
+          <div class="tip-icon">👤</div>
+          <div class="tip-title">By name</div>
+          <div class="tip-text">Select "Name" and type a first or last name</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">📞</div>
+          <div class="tip-title">By phone</div>
+          <div class="tip-text">Select "Phone number" and type a part of the number</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">🏦</div>
+          <div class="tip-title">By IBAN</div>
+          <div class="tip-text">Select "IBAN" and type e.g. "NL77RABO"</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">📧</div>
+          <div class="tip-title">By email</div>
+          <div class="tip-text">Select "Email address" and type a part of the address</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">🏠</div>
+          <div class="tip-title">By postal code</div>
+          <div class="tip-text">Select "Postal code" and type e.g. "1504" or "1504 HN"</div>
+        </div>
+        <div class="tip">
+          <div class="tip-icon">🛂</div>
+          <div class="tip-title">By ID number</div>
+          <div class="tip-text">Select "ID Number" and type a passport, driver's license or EU ID number</div>
+        </div>
       </div>
-      <div class="tip">
-        <div class="tip-icon">📞</div>
-        <div class="tip-title">By phone</div>
-        <div class="tip-text">Select "Phone" and type part of a number</div>
+    </div>
+    <table id="results-table" style="display:none">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Street</th>
+          <th>Postal</th>
+          <th>City</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>IBAN / ID</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="pager" id="pagination"></div>
+
+</div><!-- /page-search -->
+
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     PAGE: OVERZICHT
+     ════════════════════════════════════════════════════════════════════════ -->
+<div id="page-overview" class="page">
+
+  <div class="ov-wrap">
+    <div class="ov-filter-panel">
+      <div class="ov-filter-title">Filters</div>
+
+      <!-- Toggle filters -->
+      <div class="ov-filter-row">
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_iban">…</span>
+          <button class="filter-toggle" data-filter="has_iban">🏦 With IBAN</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_password">…</span>
+          <button class="filter-toggle" data-filter="has_password">🔑 Password</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_pincode">…</span>
+          <button class="filter-toggle" data-filter="has_pincode">🔢 App PIN</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_notes">…</span>
+          <button class="filter-toggle" data-filter="has_notes">📝 Notes</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_summons">…</span>
+          <button class="filter-toggle" data-filter="has_summons">📬 Summons</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-is_deceased">…</span>
+          <button class="filter-toggle" data-filter="is_deceased">💀 Deceased</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-is_active">…</span>
+          <button class="filter-toggle" data-filter="is_active">✅ Active</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-is_inactive">…</span>
+          <button class="filter-toggle" data-filter="is_inactive">❌ Inactive</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_kvk">…</span>
+          <button class="filter-toggle" data-filter="has_kvk">🏢 KvK (Chamber of Comm.)</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_id_doc">…</span>
+          <button class="filter-toggle" data-filter="has_id_doc">🛂 Driver Lic./Passport</button>
+        </div>
+        <div class="filter-toggle-wrap">
+          <span class="filter-count" id="fc-has_bsn">…</span>
+          <button class="filter-toggle" data-filter="has_bsn">🪪 BSN</button>
+        </div>
       </div>
-      <div class="tip">
-        <div class="tip-icon">🏦</div>
-        <div class="tip-title">By IBAN</div>
-        <div class="tip-text">Select "IBAN" and type an account number, e.g. "NL77RABO"</div>
-      </div>
-      <div class="tip">
-        <div class="tip-icon">📧</div>
-        <div class="tip-title">By email</div>
-        <div class="tip-text">Select "Email" and type part of an email address</div>
-      </div>
-      <div class="tip">
-        <div class="tip-icon">🏠</div>
-        <div class="tip-title">By postal code</div>
-        <div class="tip-text">Select "Postal code" and type e.g. "1504" or "1504 HN"</div>
-      </div>
-      <div class="tip">
-        <div class="tip-icon">🔍</div>
-        <div class="tip-title">All fields</div>
-        <div class="tip-text">Leave "All fields" selected for a broad search</div>
+
+      <!-- City + sort + actions -->
+      <div class="ov-filter-row">
+        <div class="city-select-wrap">
+          <label>City / Town:</label>
+          <select id="city-select">
+            <option value="">All places</option>
+          </select>
+        </div>
+        <div class="sort-select-wrap">
+          <label>Sort:</label>
+          <select id="sort-select">
+            <option value="city">City → Name</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="ov-search-btn" style="padding:7px 18px;font-size:13px">Show</button>
+        <button id="ov-reset-btn">Reset</button>
       </div>
     </div>
   </div>
 
-  <table id="results-table" style="display:none">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Street + No.</th>
-        <th>Postal code</th>
-        <th>City</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>IBAN</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="tbody"></tbody>
-  </table>
-</div>
+  <!-- OV results bar -->
+  <div class="results-bar" style="max-width:1400px;margin:0 auto;padding:0 28px 10px">
+    <span class="result-info" id="ov-result-info"></span>
+    <button class="export-btn" id="ov-export-btn">📥 Export CSV</button>
+  </div>
 
-<!-- ── Pagination ──────────────────────────────────────────────────────── -->
-<div id="pagination"></div>
+  <!-- OV table/states -->
+  <div class="table-wrap" style="max-width:1400px;margin:0 auto">
+    <div class="loader" id="ov-loader">
+      <div class="spinner"></div>
+      Loading... (this may take a while for large filters)
+    </div>
+    <div class="empty-state" id="ov-empty">
+      <div class="icon">⚠️</div>
+      <h2 id="ov-empty-title">No results</h2>
+      <p id="ov-empty-sub">No records found for this filter setting.</p>
+    </div>
+    <div id="ov-intro">
+      <div class="icon">📋</div>
+      <h2>Overview Page</h2>
+      <p>Choose one or more filters above, or select a city/town to view records. You can combine multiple filters.</p>
+      <div class="ov-hint-grid">
+        <div class="ov-hint"><strong>🏦 With IBAN</strong>All customers with an account number</div>
+        <div class="ov-hint"><strong>🔑 Password</strong>Records with a password field</div>
+        <div class="ov-hint"><strong>📝 Notes</strong>Records with customer service log</div>
+        <div class="ov-hint"><strong>📬 Summons</strong>Customers with payment arrears</div>
+        <div class="ov-hint"><strong>💀 Deceased</strong>Records with death notification</div>
+        <div class="ov-hint"><strong>🌍 Per stad</strong>Select a city/town from the list</div>
+      </div>
+    </div>
+    <table id="ov-table" style="display:none">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>City</th>
+          <th>Street</th>
+          <th>Postal</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>IBAN / ID</th>
+          <th>Info</th>
+        </tr>
+      </thead>
+      <tbody id="ov-tbody"></tbody>
+    </table>
+  </div>
+  <div class="pager" id="ov-pagination"></div>
 
-<!-- ── Detail Modal ────────────────────────────────────────────────────── -->
+</div><!-- /page-overview -->
+
+
+<!-- ══ DETAIL MODAL ════════════════════════════════════════════════════════ -->
 <div id="modal-overlay">
   <div id="modal">
     <div id="modal-header">
-      <span id="modal-title">Record Details</span>
+      <span id="modal-title">Personal Details</span>
       <button id="modal-close" title="Close">✕</button>
     </div>
     <div id="modal-body">
-      <div class="field-grid" id="modal-grid"></div>
+      <div id="modal-content">
+        <div style="color:var(--sub);padding:20px">Loading...</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ── Database Management Modal ──────────────────────────────────────── -->
+<!-- ══ DB MANAGEMENT MODAL ═════════════════════════════════════════════════ -->
 <div id="db-modal-overlay">
   <div id="db-modal">
     <div id="db-modal-header">
-      <span id="db-modal-title">Manage databases</span>
+      <span id="db-modal-title">Manage Databases</span>
       <button id="db-modal-close" title="Close">&#x2715;</button>
     </div>
     <div id="db-modal-body">
       <div id="db-list">Loading...</div>
       <div class="db-add-note">
-        <strong style="color:var(--accent)">Add a database?</strong><br>
-        Run <strong>menu.bat</strong> and select option 2 (Import database).
+        <strong style="color:var(--accent)">Add database?</strong><br>
+        Run <strong>menu.bat</strong> and choose option 2 (Import database).
         It will be added to the list automatically.
       </div>
     </div>
   </div>
 </div>
 
+
 <script>
-// ── State ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════════════
 let currentPage  = 1;
 let currentQ     = '';
 let currentField = 'all';
 let totalPages   = 0;
 let lastResults  = [];
 let debounceTimer;
+let _searchSeq = 0; // Increments on every doSearch; used to discard stale responses
 
-// ── Database colors & filter ────────────────────────────────────────────────
+// Overview state
+let ovPage       = 1;
+let ovFilters    = new Set();
+let ovLastResults = [];
+let ovTotalPages = 0;
+
+// Databases
 const DB_PALETTE = ['#4f8ef7','#6c63ff','#4caf7d','#f7a44f','#f25f5c',
                     '#00d4aa','#e879f9','#fb923c','#38bdf8','#a3e635'];
-let allDatabases  = [];  // [{name, records, sizeMB, ...}]
-let activeDbNames = new Set(); // which DBs are currently enabled in filter
+let allDatabases  = [];
+let activeDbNames = new Set();
 
 function dbColor(name) {
-  const idx = [...name].reduce((a, c) => a + c.charCodeAt(0), 0) % DB_PALETTE.length;
+  const idx = [...name].reduce((a,c) => a + c.charCodeAt(0), 0) % DB_PALETTE.length;
   return DB_PALETTE[idx];
 }
-
 function dbBadgeHtml(dbName) {
   if (!dbName) return '';
   const col = dbColor(dbName);
   return `<span class="badge-db" style="background:${col}22;color:${col};border:1px solid ${col}44">${esc(dbName)}</span>`;
 }
 
-// Keywords that trigger a warning highlight in the activity log (Dutch - matches database content)
+// ══════════════════════════════════════════════════════════════════════════
+//  KEYWORD LISTS
+// ══════════════════════════════════════════════════════════════════════════
 const WARN_KEYWORDS = [
   'agressief','agressieve','agressiviteit',
   'dreigt','bedreiging','bedreigt','wapens',
   'geweld','mishandeling','geslagen',
-  'onbeschoft','schelden','scheld','kanker',
-  'sta deze klant niet te woord',
-  'laat op! niet helpen','let op','niet helpen',
-  'bewind','schuldsanering','schuldhulp','schuldhulpverlener',
+  'onbeschoft','schelden','kanker',
+  'sta deze klant niet te woord','laat op! niet helpen',
+  'let op','niet helpen',
+  'bewind','schuldsanering','schuldhulp',
   'bewindvoerder','bewindvoering','schuldhulpverlening',
   'politie','aangifte','beveiliger',
   'klant is agressief',
-  'overlijden','overleden','gestorven','nabestaande','nabestaanden','!',
 ];
+const DEAD_KEYWORDS   = ['overlijden','overleden','gestorven','nabestaande','nabestaanden','overled'];
+const SUMMON_KEYWORDS = ['aanmaning','sommatie','incasso','deurwaarder','ingebrekestelling','betalingsachterstand'];
+const IDDOC_KEYWORDS  = ['rijbewijs','paspoort','identiteitskaart','identiteitsbewijs','identiteitsdocument','id-kaart','id kaart'];
 
-function hasWarning(name, log) {
-  if (!log && !name) return false;
-  const hay = ((name || '') + ' ' + (log || '')).toLowerCase();
-  return WARN_KEYWORDS.some(kw => hay.includes(kw));
+function hasFlag(text, list) {
+  if (!text) return false;
+  const h = text.toLowerCase();
+  return list.some(kw => h.includes(kw));
 }
 
-// ── DOM refs ───────────────────────────────────────────────────────────────
-const inp      = document.getElementById('search-input');
-const sel      = document.getElementById('field-select');
-const btn      = document.getElementById('search-btn');
-const clrBtn   = document.getElementById('clear-btn');
-const expBtn   = document.getElementById('export-btn');
-const tbody    = document.getElementById('tbody');
-const table    = document.getElementById('results-table');
-const loader   = document.getElementById('loader');
-const empty    = document.getElementById('empty-state');
-const welcome  = document.getElementById('welcome');
-const pager    = document.getElementById('pagination');
-const resInfo  = document.getElementById('result-info');
-const overlay  = document.getElementById('modal-overlay');
-const modalTitle = document.getElementById('modal-title');
-const modalGrid  = document.getElementById('modal-grid');
-const modalClose = document.getElementById('modal-close');
-const statsBadge   = document.getElementById('stats-badge');
-const dbFilter     = document.getElementById('db-filter');
-const manageDbBtn  = document.getElementById('manage-db-btn');
-const dbModalOverlay = document.getElementById('db-modal-overlay');
-const dbModalClose   = document.getElementById('db-modal-close');
-const dbList         = document.getElementById('db-list');
+// ══════════════════════════════════════════════════════════════════════════
+//  DOM REFS
+// ══════════════════════════════════════════════════════════════════════════
+const inp       = document.getElementById('search-input');
+const sel       = document.getElementById('field-select');
+const searchBtn = document.getElementById('search-btn');
+const clrBtn    = document.getElementById('clear-btn');
+const expBtn    = document.getElementById('export-btn');
+const tbody     = document.getElementById('tbody');
+const table     = document.getElementById('results-table');
+const loader    = document.getElementById('loader');
+const emptyEl   = document.getElementById('empty-state');
+const welcome   = document.getElementById('welcome');
+const pager     = document.getElementById('pagination');
+const resInfo   = document.getElementById('result-info');
+const overlay   = document.getElementById('modal-overlay');
+const modalTitle    = document.getElementById('modal-title');
+const modalContent  = document.getElementById('modal-content');
+const modalClose    = document.getElementById('modal-close');
+const statsBadge    = document.getElementById('stats-badge');
+const dbFilter      = document.getElementById('db-filter');
+const manageDbBtn   = document.getElementById('manage-db-btn');
+const dbModalOvl    = document.getElementById('db-modal-overlay');
+const dbModalClose  = document.getElementById('db-modal-close');
+const dbList        = document.getElementById('db-list');
 
-// ── Load databases & stats ──────────────────────────────────────────────────
+// OV refs
+const ovLoader   = document.getElementById('ov-loader');
+const ovEmpty    = document.getElementById('ov-empty');
+const ovIntro    = document.getElementById('ov-intro');
+const ovTable    = document.getElementById('ov-table');
+const ovTbody    = document.getElementById('ov-tbody');
+const ovPager    = document.getElementById('ov-pagination');
+const ovResInfo  = document.getElementById('ov-result-info');
+const ovExpBtn   = document.getElementById('ov-export-btn');
+const ovSearchBtn = document.getElementById('ov-search-btn');
+const ovResetBtn  = document.getElementById('ov-reset-btn');
+const citySelect  = document.getElementById('city-select');
+const sortSelect  = document.getElementById('sort-select');
+
+// ══════════════════════════════════════════════════════════════════════════
+//  TAB NAVIGATION
+// ══════════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('page-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'overview') {
+      loadCities();
+      loadFilterCounts();
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+//  DATABASES
+// ══════════════════════════════════════════════════════════════════════════
 function loadDatabases() {
   return fetch('/api/databases').then(r => r.json()).then(dbs => {
     allDatabases = dbs;
-    // Keep existing active set, or enable all by default
-    if (activeDbNames.size === 0) {
-      dbs.forEach(d => activeDbNames.add(d.name));
-    }
+    if (activeDbNames.size === 0) dbs.forEach(d => activeDbNames.add(d.name));
     renderDbFilter(dbs);
     renderDbList(dbs);
   }).catch(() => {});
 }
 
 function renderDbFilter(dbs) {
-  // Only show filter when there is more than 1 database
-  if (dbs.length <= 1) {
-    dbFilter.style.display = 'none';
-    return;
-  }
+  if (dbs.length <= 1) { dbFilter.style.display = 'none'; return; }
   dbFilter.style.display = 'flex';
-  // Keep the label, rebuild chips
   const label = dbFilter.querySelector('.filter-label');
   dbFilter.innerHTML = '';
   dbFilter.appendChild(label);
@@ -863,7 +1424,7 @@ function renderDbFilter(dbs) {
     chip.className   = 'db-chip' + (activeDbNames.has(db.name) ? '' : ' off');
     chip.textContent = db.name;
     chip.style.cssText = `background:${col}22;color:${col};border-color:${col}55`;
-    chip.title = `${(db.records||0).toLocaleString('en-US')} records`;
+    chip.title = `${(db.records||0).toLocaleString('nl-NL')} records`;
     chip.addEventListener('click', () => {
       if (activeDbNames.has(db.name)) {
         if (activeDbNames.size > 1) activeDbNames.delete(db.name);
@@ -878,78 +1439,121 @@ function renderDbFilter(dbs) {
 }
 
 fetch('/api/stats').then(r => r.json()).then(d => {
-  let badge = `${d.total.toLocaleString('en-US')} records · ${d.dbSizeMB} MB`;
-  if (d.databases && d.databases.length > 1) {
-    badge = `${d.databases.length} databases · ${d.total.toLocaleString('en-US')} records · ${d.dbSizeMB} MB`;
-  }
+  let badge = `${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
+  if (d.databases && d.databases.length > 1)
+    badge = `${d.databases.length} databases · ${d.total.toLocaleString('nl-NL')} records · ${d.dbSizeMB} MB`;
   statsBadge.textContent = badge;
 }).catch(() => { statsBadge.textContent = 'Database loaded'; });
 
 loadDatabases();
 
-// ── Search ─────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+//  SEARCH PAGE
+// ══════════════════════════════════════════════════════════════════════════
 function doSearch(page = 1) {
   const q = inp.value.trim();
   if (!q) { showWelcome(); return; }
-
   currentQ     = q;
   currentField = sel.value;
   currentPage  = page;
-
   showLoader();
-
-  const dbsParam = [...activeDbNames].join(',');
-  const params = new URLSearchParams({ q, field: currentField, page, dbs: dbsParam });
+  const seq = ++_searchSeq; // Capture sequence number for this request
+  const params = new URLSearchParams({
+    q, field: currentField, page,
+    dbs: [...activeDbNames].join(','),
+  });
   fetch('/api/search?' + params)
     .then(r => r.json())
-    .then(renderResults)
-    .catch(err => showError(err.message));
+    .then(data  => { if (seq === _searchSeq) renderResults(data); })
+    .catch(err  => { if (seq === _searchSeq) showError(err.message); });
 }
 
 function renderResults(data) {
-  hideAll();
+  hideAllSearch();
   lastResults = data.results || [];
   totalPages  = data.pages  || 0;
-
   if (!lastResults.length) {
-    empty.style.display = 'block';
+    emptyEl.style.display = 'block';
     document.getElementById('empty-title').textContent = 'No results found';
     document.getElementById('empty-sub').textContent =
-      `Nothing found for "${currentQ}". Try a different search term.`;
+      `Niets gevonden voor "${currentQ}". Probeer een andere zoekterm.`;
     resInfo.textContent  = '';
     expBtn.style.display = 'none';
     return;
   }
-
-  resInfo.textContent  = `${data.total.toLocaleString('en-US')} results found (page ${data.page} of ${totalPages})`;
+  resInfo.textContent  = `${data.total.toLocaleString('nl-NL')} resultaten gevonden (pagina ${data.page} of ${totalPages})`;
   expBtn.style.display = 'inline-block';
-
   tbody.innerHTML = '';
   for (const r of lastResults) {
-    const tr = document.createElement('tr');
-    tr.dataset.id = r.id;
-    const warnBadge = hasWarning(r.name, '') ?
-      '<span class="badge-warn">⚠ Warning</span>' : '';
-    const dbBadge = allDatabases.length > 1 ? dbBadgeHtml(r._db) : '';
-    tr.innerHTML = `
-      <td class="td-name">${esc(r.name)}${warnBadge}${dbBadge}</td>
-      <td>${esc(r.street) || '<span style="color:var(--sub)">—</span>'}</td>
-      <td>${esc(r.postal) || '<span style="color:var(--sub)">—</span>'}</td>
-      <td>${esc(r.city)   || '<span style="color:var(--sub)">—</span>'}</td>
-      <td>${esc(r.phone)  || '<span style="color:var(--sub)">—</span>'}</td>
-      <td style="max-width:180px">${esc(r.email)  || '<span style="color:var(--sub)">—</span>'}</td>
-      <td style="font-family:monospace;font-size:12px">${esc(r.iban)   || '<span style="color:var(--sub)">—</span>'}</td>
-      <td>${statusBadge(r.status)}</td>
-    `;
-    tr.addEventListener('click', () => openRecord(r.id, r.name, r._db));
-    tbody.appendChild(tr);
+    tbody.appendChild(buildRow(r, true));
   }
-
   table.style.display = 'table';
-  renderPager(data.page, totalPages);
+  renderPager(pager, data.page, totalPages, p => doSearch(p));
 }
 
-// ── Status badge ───────────────────────────────────────────────────────────
+function buildRow(r, showDbBadge) {
+  const tr = document.createElement('tr');
+  tr.dataset.id = r.id;
+  const warnBadge = hasFlag(r.name + ' ' + (r._flash||''), WARN_KEYWORDS)
+    ? '<span class="badge-warn">⚠</span>' : '';
+  const deadBadge = hasFlag(r.name, DEAD_KEYWORDS)
+    ? '<span class="badge-dead">✝</span>' : '';
+  const dbBadge   = (showDbBadge && allDatabases.length > 1) ? dbBadgeHtml(r._db) : '';
+  // IBAN/ID column: show IBAN if present, otherwise ID number
+  const ibanOrId = r.iban
+    ? `<span style="font-family:monospace;font-size:12px">${esc(r.iban)}</span>`
+    : r.id_number
+      ? `<span style="font-family:monospace;font-size:11px;color:#38bdf8" title="${esc(r.id_type||'ID')}">${esc(r.id_type ? r.id_type.substring(0,3) + ': ' : '')}${esc(r.id_number)}</span>`
+      : dash();
+  tr.innerHTML = `
+    <td class="td-name">${esc(r.name)}${warnBadge}${deadBadge}${dbBadge}</td>
+    <td>${esc(r.street) || dash()}</td>
+    <td>${esc(r.postal) || dash()}</td>
+    <td>${esc(r.city)   || dash()}</td>
+    <td>${esc(r.phone)  || dash()}</td>
+    <td style="max-width:180px">${esc(r.email)  || dash()}</td>
+    <td>${ibanOrId}</td>
+    <td>${statusBadge(r.status)}</td>
+  `;
+  tr.addEventListener('click', () => openRecord(r.id, r.name, r._db));
+  return tr;
+}
+
+function buildOvRow(r) {
+  const tr  = document.createElement('tr');
+  tr.dataset.id = r.id;
+  const warnBadge   = hasFlag(r.name + ' ' + (r._flash||''), WARN_KEYWORDS) ? '<span class="badge-warn">⚠</span>' : '';
+  const deadBadge   = hasFlag(r.name, DEAD_KEYWORDS) ? '<span class="badge-dead">✝</span>' : '';
+  const dbBadge     = allDatabases.length > 1 ? dbBadgeHtml(r._db) : '';
+  // Info column: tags for what's notable
+  let infoTags = '';
+  if (r.iban)      infoTags += '<span class="badge" style="background:rgba(76,175,125,.15);color:var(--green);font-size:10px">IBAN</span> ';
+  if (r.id_number) {
+    const idLabel = r.id_type || 'ID';
+    infoTags += `<span class="badge" style="background:rgba(56,189,248,.12);color:#38bdf8;font-size:10px">${esc(idLabel)}</span> `;
+  }
+  // IBAN/ID column
+  const ovIbanOrId = r.iban
+    ? `<span style="font-family:monospace;font-size:12px">${esc(r.iban)}</span>`
+    : r.id_number
+      ? `<span style="font-family:monospace;font-size:11px;color:#38bdf8" title="${esc(r.id_type||'ID')}">${esc(r.id_type ? r.id_type.substring(0,3) + ': ' : '')}${esc(r.id_number)}</span>`
+      : dash();
+  tr.innerHTML = `
+    <td class="td-name">${esc(r.name)}${warnBadge}${deadBadge}${dbBadge}</td>
+    <td>${esc(r.city)   || dash()}</td>
+    <td>${esc(r.street) || dash()}</td>
+    <td>${esc(r.postal) || dash()}</td>
+    <td>${esc(r.phone)  || dash()}</td>
+    <td style="max-width:160px">${esc(r.email) || dash()}</td>
+    <td>${ovIbanOrId}</td>
+    <td>${infoTags}${statusBadge(r.status)}</td>
+  `;
+  tr.addEventListener('click', () => openRecord(r.id, r.name, r._db));
+  return tr;
+}
+
+function dash() { return '<span style="color:var(--sub)">—</span>'; }
+
 function statusBadge(s) {
   if (!s) return '';
   const cls = s.toLowerCase() === 'active'   ? 'badge-active'
@@ -958,498 +1562,1158 @@ function statusBadge(s) {
   return `<span class="badge ${cls}">${esc(s)}</span>`;
 }
 
-// ── Pagination ─────────────────────────────────────────────────────────────
-function renderPager(page, pages) {
-  pager.innerHTML = '';
+// ══════════════════════════════════════════════════════════════════════════
+//  PAGINATION
+// ══════════════════════════════════════════════════════════════════════════
+function renderPager(container, page, pages, onPage) {
+  container.innerHTML = '';
   if (pages <= 1) return;
-
   const add = (label, p, disabled, active) => {
     const b = document.createElement('button');
     b.className = 'page-btn' + (active ? ' active' : '');
     b.textContent = label;
     b.disabled = disabled;
-    if (!disabled && !active) b.addEventListener('click', () => doSearch(p));
-    pager.appendChild(b);
+    if (!disabled && !active) b.addEventListener('click', () => onPage(p));
+    container.appendChild(b);
   };
-
-  add('← Prev', page - 1, page <= 1);
-
-  let start = Math.max(1, page - 2);
-  let end   = Math.min(pages, page + 2);
-  if (page <= 3)          end   = Math.min(pages, 5);
-  if (page >= pages - 2)  start = Math.max(1, pages - 4);
-
-  if (start > 1) { add('1', 1, false); if (start > 2) add('…', null, true); }
-  for (let i = start; i <= end; i++) add(i, i, false, i === page);
-  if (end < pages) { if (end < pages - 1) add('…', null, true); add(pages, pages, false); }
-
-  add('Next →', page + 1, page >= pages);
-
+  add('← Prev', page-1, page<=1);
+  let start = Math.max(1, page-2), end = Math.min(pages, page+2);
+  if (page<=3)         end   = Math.min(pages, 5);
+  if (page>=pages-2)   start = Math.max(1, pages-4);
+  if (start>1) { add('1',1,false); if(start>2) add('…',null,true); }
+  for (let i=start; i<=end; i++) add(i,i,false,i===page);
+  if (end<pages) { if(end<pages-1) add('…',null,true); add(pages,pages,false); }
+  add('Next →', page+1, page>=pages);
   const info = document.createElement('span');
-  info.id = 'page-info';
-  info.textContent = `Page ${page} of ${pages}`;
-  pager.appendChild(info);
+  info.className = 'page-info';
+  info.textContent = `Pagina ${page} of ${pages}`;
+  container.appendChild(info);
 }
 
-// ── Record detail ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+//  OVERVIEW PAGE
+// ══════════════════════════════════════════════════════════════════════════
+let citiesLoaded = false;
+function loadCities() {
+  if (citiesLoaded) return;
+  const dbs = [...activeDbNames].join(',');
+  fetch('/api/cities?' + new URLSearchParams({ dbs }))
+    .then(r => r.json())
+    .then(data => {
+      const cities = data.cities || [];
+      citySelect.innerHTML = '<option value="">All places</option>';
+      cities.forEach(city => {
+        const opt = document.createElement('option');
+        opt.value = city;
+        opt.textContent = city;
+        citySelect.appendChild(opt);
+      });
+      citiesLoaded = true;
+    }).catch(() => {});
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  FILTER COUNTS
+// ══════════════════════════════════════════════════════════════════════════
+let _countsLoaded   = false;
+let _countsFetching = false;
+let _countsPollTimer = null;
+
+function fmtCount(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (n >= 1000)    return Math.round(n/1000) + 'k';
+  return n.toLocaleString('nl-NL');
+}
+
+function loadFilterCounts() {
+  if (_countsLoaded || _countsFetching) return;  // prevent concurrent calls
+  clearTimeout(_countsPollTimer);
+  _countsFetching = true;
+  const dbs = [...activeDbNames].join(',');
+  fetch('/api/filter_counts?' + new URLSearchParams({ dbs }))
+    .then(r => r.json())
+    .then(data => {
+      _countsFetching = false;
+      // Update all count spans (server returns counts at top level)
+      const keys = ['has_iban','has_password','has_pincode','has_kvk','has_notes',
+                    'has_summons','has_id_doc','has_bsn','is_deceased','is_active','is_inactive'];
+      for (const k of keys) {
+        const el = document.getElementById('fc-' + k);
+        if (!el) continue;
+        if (data[k] !== undefined) {
+          el.textContent = fmtCount(data[k]);
+          el.classList.add('ready');
+        }
+      }
+      if (!data.ready) {
+        // Counts still being computed — poll again after 5s
+        _countsPollTimer = setTimeout(loadFilterCounts, 5000);
+      } else {
+        _countsLoaded = true;
+      }
+    })
+    .catch(() => {
+      _countsFetching = false;
+      _countsPollTimer = setTimeout(loadFilterCounts, 10000);
+    });
+}
+
+// Filter toggle buttons
+document.querySelectorAll('.filter-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.filter;
+    if (ovFilters.has(key)) {
+      ovFilters.delete(key);
+      btn.classList.remove('on');
+    } else {
+      ovFilters.add(key);
+      btn.classList.add('on');
+    }
+  });
+});
+
+ovSearchBtn.addEventListener('click', () => doBrowse(1));
+ovResetBtn.addEventListener('click', () => {
+  ovFilters.clear();
+  document.querySelectorAll('.filter-toggle').forEach(b => b.classList.remove('on'));
+  citySelect.value = '';
+  sortSelect.value = 'city';
+  showOvIntro();
+});
+
+citySelect.addEventListener('change', () => {
+  // auto-trigger when a city is chosen
+  if (citySelect.value) doBrowse(1);
+});
+
+function doBrowse(page = 1) {
+  ovPage = page;
+  const noFilter = ovFilters.size === 0 && !citySelect.value;
+  if (noFilter) { showOvIntro(); return; }
+  showOvLoader();
+  const params = new URLSearchParams({
+    page,
+    dbs:          [...activeDbNames].join(','),
+    has_iban:     ovFilters.has('has_iban')     ? '1' : '0',
+    has_password: ovFilters.has('has_password') ? '1' : '0',
+    has_notes:    ovFilters.has('has_notes')    ? '1' : '0',
+    has_summons:  ovFilters.has('has_summons')  ? '1' : '0',
+    is_deceased:  ovFilters.has('is_deceased')  ? '1' : '0',
+    is_active:    ovFilters.has('is_active')    ? '1' : '0',
+    is_inactive:  ovFilters.has('is_inactive')  ? '1' : '0',
+    has_kvk:      ovFilters.has('has_kvk')      ? '1' : '0',
+    has_pincode:  ovFilters.has('has_pincode')  ? '1' : '0',
+    has_id_doc:   ovFilters.has('has_id_doc')   ? '1' : '0',
+    has_bsn:      ovFilters.has('has_bsn')      ? '1' : '0',
+    city:         citySelect.value,
+    sort:         sortSelect.value,
+  });
+  fetch('/api/browse?' + params)
+    .then(r => r.json())
+    .then(renderOvResults)
+    .catch(err => showOvError(err.message));
+}
+
+function renderOvResults(data) {
+  hideAllOv();
+  ovLastResults = data.results || [];
+  ovTotalPages  = data.pages   || 0;
+
+  if (data.empty_hint) { showOvIntro(); return; }
+
+  if (!ovLastResults.length) {
+    ovEmpty.style.display = 'block';
+    document.getElementById('ov-empty-title').textContent = 'No results';
+    document.getElementById('ov-empty-sub').textContent =
+      'No records found for this filter setting. Probeer andere filters.';
+    ovResInfo.textContent  = '';
+    ovExpBtn.style.display = 'none';
+    return;
+  }
+
+  ovResInfo.textContent  = `${data.total.toLocaleString('nl-NL')} records gevonden (pagina ${data.page} of ${ovTotalPages})`;
+  ovExpBtn.style.display = 'inline-block';
+  ovTbody.innerHTML = '';
+  for (const r of ovLastResults) ovTbody.appendChild(buildOvRow(r));
+  ovTable.style.display = 'table';
+  renderPager(ovPager, data.page, ovTotalPages, p => doBrowse(p));
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  RECORD DETAIL MODAL
+// ══════════════════════════════════════════════════════════════════════════
 function openRecord(id, name, dbName) {
   const dbTag = (allDatabases.length > 1 && dbName)
-    ? ` <span style="font-size:12px;font-weight:400;color:${dbColor(dbName)}">[${dbName}]</span>`
+    ? ` <span style="font-size:11px;font-weight:400;color:${dbColor(dbName)}">[${dbName}]</span>`
     : '';
-  modalTitle.innerHTML = esc(name || 'Record Details') + dbTag;
-  modalGrid.innerHTML  = '<div style="color:var(--sub);padding:20px">Loading...</div>';
+  modalTitle.innerHTML = esc(name || 'Personal Details') + dbTag;
+  modalContent.innerHTML = '<div style="color:var(--sub);padding:20px">Loading...</div>';
   overlay.classList.add('open');
-
   const params = new URLSearchParams({ id });
   if (dbName) params.set('db', dbName);
-
   fetch('/api/record?' + params)
     .then(r => r.json())
     .then(d => {
-      if (d.error) { modalGrid.innerHTML = `<p style="color:var(--red)">${esc(d.error)}</p>`; return; }
-      renderModal(d.record, d.db);
+      if (d.error) {
+        modalContent.innerHTML = `<p style="color:var(--red)">${esc(d.error)}</p>`;
+        return;
+      }
+      renderPersonCard(d.record, d.db);
     })
-    .catch(() => { modalGrid.innerHTML = '<p style="color:var(--red)">Loading failed</p>'; });
+    .catch(() => {
+      modalContent.innerHTML = '<p style="color:var(--red)">Loading failed</p>';
+    });
 }
 
-// Always show these key fields in the summary even if empty
-const SUMMARY_FIELDS = [
-  { key: 'Flash_Message__c',                      label: 'Warning'       },
-  { key: 'Name',                                  label: 'Name'          },
-  { key: 'Phone',                                 label: 'Phone'         },
-  { key: 'MobilePhone',                           label: 'Mobile'        },
-  { key: 'vlocity_cmt__BillingEmailAddress__c',   label: 'Email'         },
-  { key: 'Email',                                 label: 'Email'         },
-  { key: 'Email__c',                              label: 'Email'         },
-  { key: 'PersonEmail',                           label: 'Email'         },
-  { key: 'Contact_Email__c',                      label: 'Email'         },
-  { key: 'EmailAddress__c',                       label: 'Email'         },
-  { key: 'Bank_Account_Number__c',                label: 'IBAN'          },
-  { key: 'Bank_Account_Holder_Name__c',           label: 'Account holder'},
-  { key: 'vlocity_cmt__Status__c',                label: 'Status'        },
-  { key: 'Segment__c',                            label: 'Segment'       },
-  { key: 'BillingStreet',                         label: 'Street'        },
-  { key: 'House_Number__c',                       label: 'House no.'     },
-  { key: 'BillingCity',                           label: 'City'          },
-  { key: 'BillingPostalCode',                     label: 'Postal code'   },
-  { key: 'BillingCountry',                        label: 'Country'       },
+// Phone field keys in order of preference
+const PHONE_KEYS = [
+  'Phone','MobilePhone','HomePhone','OtherPhone','Mobile__c',
+  'PhoneNumber__c','Telephone__c','TelephoneNumber__c','ContactPhone__c',
 ];
-
-// Named groups – order matters; remaining non-empty fields go in "Overige velden"
-const GROUPS = [
-  { title: 'General', keys: [
-      'Id','Name','Type','IsActive','vlocity_cmt__Status__c','Segment__c',
-      'Segment_Indicator__c','Brand_Type__c','AccountSource','RecordTypeId',
-      'Customer_Type__c','Business_Type__c','Is_B2B_Account__c',
-  ]},
-  { title: 'Contact', keys: [
-      'Phone','MobilePhone','HomePhone','OtherPhone','Fax','Mobile__c',
-      'Telephone__c','PhoneNumber__c',
-      'vlocity_cmt__BillingEmailAddress__c','Email','Email__c','PersonEmail',
-      'Contact_Email__c','EmailAddress__c',
-      'Website',
-      'coosto__WhatsApp_Id__c','coosto__Facebook_Id__c','coosto__Twitter_Id__c',
-      'coosto__Instagram_Id__c','coosto__LinkedIn_Id__c','coosto__Youtube_Id__c',
-  ]},
-  { title: 'Billing address', keys: [
-      'BillingStreet','House_Number__c','House_Number_Extension__c',
-      'BillingCity','BillingPostalCode','BillingState','BillingCountry',
-      'Postal_Code__c','City__c','Street_Address__c',
-      'Main_Address__c','Billing_Address__c','Billing_Line_2__c',
-      'PO_Box__c','PO_Box_Number__c',
-  ]},
-  { title: 'Shipping address', keys: [
-      'ShippingStreet','ShippingCity','ShippingPostalCode',
-      'ShippingState','ShippingCountry',
-  ]},
-  { title: 'Identity & IDs', keys: [
-      'Id','Account_Salesforce_ID__c','AccountNumber','Siebel_Customer_ID__c',
-      'Customer_Code_Legacy_System__c','SourceSystemIdentifier',
-      'Service_Aggregator_ID__c','External_Reference_Number__c',
-      'Sugar_Contact_Id__c','JigsawCompanyId','Jigsaw',
-      'Tax_ID__c','KvK_Number__c','Chamber_Of_Commerce_Number__c',
-      'Chamber_Of_Commerce_Formula__c','CountryCode__c',
-      'vlocity_cmt__PartyId__c','vlocity_cmt__PremisesId__c',
-  ]},
-  { title: 'Financial & Banking', keys: [
-      'Bank_Account_Number__c','Bank_Account_Holder_Name__c',
-      'Bank_Details_Check__c','Payment_Method__c','Payment_Terms__c',
-      'Bill_Day__c','Paper_Invoice__c','Paper_Invoice_Charge__c',
-      'vlocity_cmt__AccountPaymentType__c','vlocity_cmt__AutoPaymentAmount__c',
-      'vlocity_cmt__AutoPaymentCardType__c','vlocity_cmt__EnableAutopay__c',
-      'vlocity_cmt__BillCycle__c','vlocity_cmt__BillFormat__c',
-      'vlocity_cmt__BillingEmailAddress__c',
-      'vlocity_cmt__CreditRating__c','vlocity_cmt__CreditScore__c',
-      'AnnualRevenue',
-  ]},
-  { title: 'Subscriptions', keys: [
-      'Total_Subscriptions__c','NumberOfVoiceSubscription__c',
-      'Total_Data_Voice_Subscriptions__c','Financial_Subscriptions__c',
-      'Data_Subscriptions__c','Num_Active_Assets__c','Num_of_Assets_LifeCycle__c',
-      'Num_of_Non_Inactive_Assets_LifeCycle__c','Num_of_Child_Accounts__c',
-      'Num_of_Active_Child_Accounts__c','NumberOfEmployees',
-  ]},
-  { title: 'Dates', keys: [
-      'CreatedDate','LastModifiedDate','LastActivityDate','LastViewedDate',
-      'InactivationDate__c','Activation_Date__c','Contract_Sign_Date__c',
-      'Last_Opportunity_Close_Date__c','vlocity_cmt__CustomerSinceDate__c',
-      'LastNCRefreshTimestamp__c',
-  ]},
-  { title: 'Account settings', keys: [
-      'IsCustomerPortal','IsPartner','VIP_Customer__c','Sales_Channel__c',
-      'UserProfile__c','UserRole__c','OwnerId','Dealer_Code__c',
-      'Account_shielding__c','Has_Insurance__c','Chubb_insurance__c',
-      'HasSensitivityDataPermission__c','HasB2BSensitivityDataPermission__c',
-      'vlocity_cmt__HasFraud__c','Block_Status__c','Customer_Level__c',
-  ]},
-  { title: 'Activity log', keys: [
-      'SObjectLog__c',
-  ]},
+// Email field keys
+const EMAIL_KEYS = [
+  'vlocity_cmt__BillingEmailAddress__c','Email','Email__c','PersonEmail',
+  'Contact_Email__c','EmailAddress__c','Personal_Email__c','BillingEmail',
 ];
+// Account password vs app pincode
+function isPasswordKey(k) {
+  return /password|wachtwoord|passwoord/i.test(k);
+}
+function isPincodeKey(k) {
+  return /^Pin(__c)?$/i.test(k) || /pincode/i.test(k);
+}
 
-// Extract phone from SObjectLog activity log
 function extractPhoneFromLog(log) {
   if (!log) return '';
   const m = log.match(/SMS\s+verstuurd[:\s]+([+\d][\d\s\-]{6,20})/i);
-  if (m) {
-    const num = m[1].replace(/\s/g, '').trim();
-    if (num.length >= 7) return num;
-  }
+  if (m) { const n = m[1].replace(/\s/g,'').trim(); if (n.length>=7) return n; }
   const intl = log.match(/\+31\d{9}/);
   if (intl) return intl[0];
   return '';
 }
 
-function renderModal(rec, sourceDb) {
-  modalGrid.innerHTML = '';
-
-  // ── Source database indicator (only when multiple databases) ──────────
-  if (allDatabases.length > 1 && sourceDb) {
-    const col  = dbColor(sourceDb);
-    const src  = document.createElement('div');
-    src.style.cssText = `grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:8px 12px;background:${col}11;border:1px solid ${col}33;border-radius:8px;margin-bottom:2px;font-size:12px`;
-    src.innerHTML = `<span style="width:8px;height:8px;border-radius:50%;background:${col};flex-shrink:0"></span><span style="color:${col};font-weight:600">Database:</span><span style="color:var(--text)">${esc(sourceDb)}</span>`;
-    modalGrid.appendChild(src);
-  }
-
-  // ── Flash_Message__c warning banner ───────────────────────────────────
-  const flashMsg = (rec['Flash_Message__c'] || '').trim();
-  if (flashMsg) {
-    const banner = document.createElement('div');
-    banner.style.cssText = 'grid-column:1/-1;background:rgba(242,95,92,.13);border:2px solid rgba(242,95,92,.55);border-radius:10px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;margin-bottom:6px';
-    const icon = document.createElement('span');
-    icon.textContent = '⚠';
-    icon.style.cssText = 'font-size:24px;color:var(--red);flex-shrink:0;line-height:1.1';
-    const body = document.createElement('div');
-    body.style.flex = '1';
-    body.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Warning</div><div style="font-size:13px;color:#f08080;line-height:1.65;white-space:pre-wrap">${esc(flashMsg)}</div>`;
-    banner.appendChild(icon);
-    banner.appendChild(body);
-    modalGrid.appendChild(banner);
-  }
-
-  // ── Summary bar: for each label show the first non-empty value found ────
-  const summaryTitle = document.createElement('div');
-  summaryTitle.className   = 'section-title';
-  summaryTitle.textContent = 'Summary';
-  modalGrid.appendChild(summaryTitle);
-
-  // Build label → best value map
-  const summaryMap = new Map(); // label → display string
-  for (const { key, label } of SUMMARY_FIELDS) {
-    if (summaryMap.has(label)) continue;
-    const val = rec[key];
-    if (val !== '' && val !== null && val !== undefined) {
-      summaryMap.set(label, String(val));
-    }
-  }
-
-  // If phone not found in standard fields, try extracting from SObjectLog
-  if (!summaryMap.has('Telefoon') || summaryMap.get('Telefoon') === '—') {
-    const logPhone = extractPhoneFromLog(rec['SObjectLog__c'] || '');
-    if (logPhone) summaryMap.set('Telefoon', logPhone);
-  }
-
-  // If email not found in standard fields, scan all string fields for an @-address
-  if (!summaryMap.has('E-mail') || summaryMap.get('E-mail') === '—') {
-    const EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
-    for (const [k, v] of Object.entries(rec)) {
-      if (k === 'SObjectLog__c') continue;
-      if (typeof v === 'string' && v.includes('@') && v.length < 300 && !v.includes('http')) {
-        const m = v.match(EMAIL_RE);
-        if (m) { summaryMap.set('E-mail', m[0]); break; }
-      }
-    }
-  }
-
-  // Ensure every label appears at least once (as —)
-  for (const { label } of SUMMARY_FIELDS) {
-    if (!summaryMap.has(label)) summaryMap.set(label, '—');
-  }
-  // Deduplicate labels while preserving order
-  const seenLabels = new Set();
-  for (const { label } of SUMMARY_FIELDS) {
-    if (seenLabels.has(label)) continue;
-    seenLabels.add(label);
-    const display = summaryMap.get(label) || '—';
-    const clean   = display.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '—';
-    const item    = document.createElement('div');
-    item.className = 'field-item';
-    // Monospace styling for IBAN
-    const mono = (label === 'IBAN') ? 'font-family:monospace;font-size:13px;' : '';
-    item.innerHTML = `
-      <div class="field-label">${esc(label)}</div>
-      <div class="field-value${clean === '—' ? ' empty' : ''}" style="${mono}">${esc(clean)}</div>
-    `;
-    modalGrid.appendChild(item);
-  }
-
-  // ── Named groups ──────────────────────────────────────────────────────
-  const usedKeys = new Set(SUMMARY_FIELDS.map(f => f.key));
-
-  for (const { title, keys } of GROUPS) {
-    // Show the field if it's in the record (even with value "false")
-    const fieldKeys = keys.filter(k => rec[k] !== undefined && rec[k] !== '' && rec[k] !== null);
-    if (!fieldKeys.length) continue;
-
-    const sectionTitle = document.createElement('div');
-    sectionTitle.className   = 'section-title';
-    sectionTitle.textContent = title;
-    modalGrid.appendChild(sectionTitle);
-
-    for (const k of fieldKeys) {
-      usedKeys.add(k);
-      addFieldItem(modalGrid, k, rec[k]);
-    }
-  }
-
-  // ── All remaining fields (catch-all) ─────────────────────────────────
-  const remaining = Object.keys(rec).filter(
-    k => !usedKeys.has(k) && rec[k] !== '' && rec[k] !== null && rec[k] !== undefined
-       && k !== 'attributes_type'  // internal Salesforce metadata
-  );
-
-  if (remaining.length) {
-    const otherTitle = document.createElement('div');
-    otherTitle.className   = 'section-title';
-    otherTitle.textContent = 'Other fields';
-    modalGrid.appendChild(otherTitle);
-    for (const k of remaining) {
-      addFieldItem(modalGrid, k, rec[k]);
-    }
-  }
+function extractEmailFromLog(log) {
+  if (!log) return '';
+  // Log entries contain: "Email verstuurd: address@domain.com (template_id - ...)"
+  const m = log.match(/E-?mail verstuurd[:\s]+([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/i);
+  if (m) return m[1];
+  return '';
 }
 
-// ── Activity log parser ────────────────────────────────────────────────────
+function getAllPhones(rec) {
+  const seen = new Set();
+  const phones = [];
+  for (const k of PHONE_KEYS) {
+    const v = rec[k];
+    if (v && typeof v === 'string' && v.trim() && !seen.has(v.trim())) {
+      seen.add(v.trim());
+      phones.push({ label: friendlyName(k), value: v.trim() });
+    }
+  }
+  // From log
+  const logPhone = extractPhoneFromLog(rec['SObjectLog__c'] || '');
+  if (logPhone && !seen.has(logPhone)) {
+    phones.push({ label: 'Phone (log)', value: logPhone });
+  }
+  return phones;
+}
+
+function getAllEmails(rec) {
+  const seen = new Set();
+  const emails = [];
+  const EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
+  for (const k of EMAIL_KEYS) {
+    const v = rec[k];
+    if (v && typeof v === 'string' && v.includes('@')) {
+      const m = v.match(EMAIL_RE);
+      if (m && !seen.has(m[0])) { seen.add(m[0]); emails.push({ label: friendlyName(k), value: m[0] }); }
+    }
+  }
+  // Extract from activity log (log entries contain "Email verstuurd: address@...")
+  const logEmail = extractEmailFromLog(rec['SObjectLog__c'] || '');
+  if (logEmail && !seen.has(logEmail)) {
+    emails.push({ label: 'Email (log)', value: logEmail });
+  }
+  return emails;
+}
+
+function getAllPasswords(rec) {
+  const passwords = [];
+  for (const k of Object.keys(rec)) {
+    if (!isPasswordKey(k)) continue;
+    const v = rec[k];
+    if (v && v !== '' && v !== null && v !== 'false' && v !== false) {
+      passwords.push({ label: friendlyName(k), value: String(v) });
+    }
+  }
+  return passwords;
+}
+
+function getAllPincodes(rec) {
+  const pincodes = [];
+  for (const k of Object.keys(rec)) {
+    if (!isPincodeKey(k)) continue;
+    const v = rec[k];
+    if (v && v !== '' && v !== null && v !== 'false' && v !== false) {
+      pincodes.push({ label: friendlyName(k), value: String(v) });
+    }
+  }
+  return pincodes;
+}
+
+// ── Activity log parser ────────────────────────────────────────────────
 function parseActivityLog(text) {
   if (!text) return [];
-  const clean = text
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
+  let clean = text
+    .replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ')
     .trim();
-
+  // SObjectLog often has NO newlines — entries are concatenated directly.
+  // Insert newlines before each date-stamp so the line-by-line parser can work.
+  clean = clean.replace(/(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2}\s*-\s)/g, '\n$1');
   const entries = [];
   let current   = null;
-
   for (const line of clean.split('\n')) {
-    // Match timestamp: DD-MM-YYYY HH:MM:SS - rest
     const m = line.match(/^(\d{2}-\d{2}-\d{4}\s+\d{2}:\d{2}:\d{2})\s*-\s*(.*)/);
     if (m) {
       if (current) entries.push(current);
       const parts = m[2].split(/\s+-\s+/);
-      let agent = '', direction = '', action = '';
-      if (parts.length >= 3) {
-        agent     = parts[0];
-        direction = parts[1];
-        action    = parts.slice(2).join(' - ');
-      } else if (parts.length === 2) {
-        agent  = parts[0];
-        action = parts[1];
-      } else {
-        action = m[2];
-      }
-      current = {
-        date:      m[1].trim(),
-        agent:     agent.trim(),
-        direction: direction.trim(),
-        action:    action.trim(),
-      };
+      let agent='', direction='', action='';
+      if (parts.length>=3) { agent=parts[0]; direction=parts[1]; action=parts.slice(2).join(' - '); }
+      else if (parts.length===2) { agent=parts[0]; action=parts[1]; }
+      else { action=m[2]; }
+      current = { date:m[1].trim(), agent:agent.trim(), direction:direction.trim(), action:action.trim() };
     } else if (current && line.trim()) {
       current.action += '\n' + line;
     } else if (!current && line.trim()) {
-      entries.push({ date: '', agent: '', direction: '', action: line.trim() });
+      entries.push({ date:'', agent:'', direction:'', action:line.trim() });
     }
   }
   if (current) entries.push(current);
   return entries;
 }
 
-function renderActivityLog(container, rawText) {
-  const entries = parseActivityLog(rawText);
+function buildLogEntryEl(entry) {
+  const isWarn   = hasFlag(entry.action, WARN_KEYWORDS);
+  const isDead   = hasFlag(entry.action, DEAD_KEYWORDS);
+  const isSummon = hasFlag(entry.action, SUMMON_KEYWORDS);
+  const isIdDoc  = hasFlag(entry.action, IDDOC_KEYWORDS);
+  const isSms    = /SMS\s+verstuurd/i.test(entry.action);
 
-  const wrapper = document.createElement('div');
-  wrapper.className        = 'field-item';
-  wrapper.style.gridColumn = '1 / -1';
+  const div = document.createElement('div');
+  div.className = 'log-entry'
+    + (isDead   ? ' log-dead'
+    : isWarn    ? ' log-warn'
+    : isSummon  ? ' log-sum'
+    : isSms     ? ' log-sms' : '');
 
-  const lbl = document.createElement('div');
-  lbl.className   = 'field-label';
-  lbl.textContent = entries.length
-    ? `Activity log (${entries.length} items)`
-    : 'Activity log';
-  wrapper.appendChild(lbl);
+  // ── Clickable header ────────────────────────────────────────────────────
+  const header = document.createElement('div');
+  header.className = 'log-header';
 
-  if (!entries.length) {
-    const emp = document.createElement('div');
-    emp.className   = 'field-value empty';
-    emp.textContent = 'No log available';
-    wrapper.appendChild(emp);
-    container.appendChild(wrapper);
-    return;
+  if (entry.date) {
+    const d = document.createElement('span');
+    d.className = 'log-date';
+    d.textContent = entry.date;
+    header.appendChild(d);
+  }
+  if (entry.direction) {
+    const dl = entry.direction.toLowerCase();
+    const s  = document.createElement('span');
+    s.className = 'log-dir ' + (dl.includes('inbound') ? 'log-dir-in' : dl.includes('outbound') ? 'log-dir-out' : 'log-dir-sys');
+    s.textContent = entry.direction;
+    header.appendChild(s);
+  }
+  // Agent name or short action preview
+  const agentText = entry.agent || (!entry.direction && entry.action
+    ? (entry.action.substring(0, 80) + (entry.action.length > 80 ? '…' : ''))
+    : '');
+  if (agentText) {
+    const a = document.createElement('span');
+    a.className = 'log-agent';
+    a.textContent = agentText;
+    header.appendChild(a);
   }
 
-  const timeline = document.createElement('div');
-  timeline.className = 'log-timeline';
+  // Tags
+  if (isDead)                        { const t=document.createElement('span'); t.className='log-tag log-tag-dead'; t.textContent='✝ Overlijden'; header.appendChild(t); }
+  if (isSummon)                      { const t=document.createElement('span'); t.className='log-tag log-tag-sum';  t.textContent='📬 Aanmaning'; header.appendChild(t); }
+  if (isIdDoc)                       { const t=document.createElement('span'); t.className='log-tag log-tag-doc';  t.textContent='🛂 ID-doc'; header.appendChild(t); }
+  if (isSms)                         { const t=document.createElement('span'); t.className='log-tag log-tag-sms';  t.textContent='SMS'; header.appendChild(t); }
+  if (isWarn && !isDead && !isSummon){ const t=document.createElement('span'); t.className='log-tag log-tag-warn'; t.textContent='⚠ Let op'; header.appendChild(t); }
 
-  // Newest entries first
-  for (const entry of [...entries].reverse()) {
-    const isWarn = hasWarning('', entry.action);
-    const isSms  = /SMS\s+verstuurd/i.test(entry.action);
-    const isDead = /overlijden|OVERLEDEN|gestorven|nabestaand/i.test(entry.action);
+  // Chevron
+  const chev = document.createElement('span');
+  chev.className = 'log-chevron';
+  chev.textContent = '▼';
+  header.appendChild(chev);
 
-    const div = document.createElement('div');
-    div.className = 'log-entry' + (isWarn || isDead ? ' log-warn' : isSms ? ' log-sms' : '');
+  div.appendChild(header);
 
-    const meta = document.createElement('div');
-    meta.className = 'log-meta';
+  // ── Collapsible body ────────────────────────────────────────────────────
+  const body = document.createElement('div');
+  body.className = 'log-body';
+  const txt = document.createElement('div');
+  txt.className = 'log-text';
+  txt.textContent = entry.action;
+  body.appendChild(txt);
+  div.appendChild(body);
 
-    if (entry.date) {
-      const ds = document.createElement('span');
-      ds.textContent = entry.date;
-      meta.appendChild(ds);
-    }
-    if (entry.direction) {
-      const dl = entry.direction.toLowerCase();
-      const ds = document.createElement('span');
-      ds.className = 'log-dir ' + (
-        dl.includes('inbound')  ? 'log-dir-in'  :
-        dl.includes('outbound') ? 'log-dir-out' : 'log-dir-sys'
-      );
-      ds.textContent = entry.direction;
-      meta.appendChild(ds);
-    }
-    if (entry.agent) {
-      const as = document.createElement('span');
-      as.textContent = entry.agent;
-      meta.appendChild(as);
-    }
-    if (isWarn || isDead) {
-      const ws = document.createElement('span');
-      ws.className   = 'log-warn-tag';
-      ws.textContent = isDead ? '✝ Deceased' : '⚠ Warning';
-      meta.appendChild(ws);
-    }
-    div.appendChild(meta);
+  header.addEventListener('click', () => div.classList.toggle('expanded'));
 
-    const txt = document.createElement('div');
-    txt.className   = 'log-text';
-    txt.textContent = entry.action;
-    div.appendChild(txt);
+  return div;
+}
 
-    timeline.appendChild(div);
+function renderPersonCard(rec, sourceDb) {
+  const frag = document.createDocumentFragment();
+
+  // ── DB source ─────────────────────────────────────────────────────────
+  if (allDatabases.length > 1 && sourceDb) {
+    const col = dbColor(sourceDb);
+    const src = document.createElement('div');
+    src.style.cssText = `display:flex;align-items:center;gap:8px;padding:7px 11px;background:${col}11;border:1px solid ${col}33;border-radius:8px;margin-bottom:10px;font-size:12px`;
+    src.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:${col}"></span><span style="color:${col};font-weight:600">Database:</span><span>${esc(sourceDb)}</span>`;
+    frag.appendChild(src);
   }
 
-  wrapper.appendChild(timeline);
-  container.appendChild(wrapper);
+  // ── Flash warning banner ──────────────────────────────────────────────
+  // Strip HTML tags from flash message before displaying
+  const _flashRaw   = (rec['Flash_Message__c'] || '').trim();
+  const _flashClean = _flashRaw
+    .replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n').replace(/<[^>]*>/g, '')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ')
+    .replace(/\n{3,}/g, '\n\n').trim();
+  if (_flashClean) {
+    const b = document.createElement('div');
+    b.className = 'special-section warn';
+    b.innerHTML = `<div class="special-title">⚠ Flitsbericht / Waarschuwing</div>
+      <div class="special-text">${esc(_flashClean)}</div>`;
+    frag.appendChild(b);
+  }
+
+  // ── Parse log once ────────────────────────────────────────────────────
+  const logRaw     = rec['SObjectLog__c'] || '';
+  const logEntries = parseActivityLog(logRaw);
+  const deadEntries   = logEntries.filter(e => hasFlag(e.action, DEAD_KEYWORDS));
+  const summonEntries = logEntries.filter(e => hasFlag(e.action, SUMMON_KEYWORDS));
+  // id-doc: scan all text in record for actual document numbers near keywords
+  // Dutch formats: passport=9 alphanum (e.g. BH1234567), DL=10 digits, ID card similar
+  const _stripHtml = s => (s||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,'')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').trim();
+  // Regex: specific Dutch document number formats (scanned all 3M records, these are the real formats)
+  // Rijbewijs: 8-10 digits only (e.g. "rijbewijs nummer 50158416")
+  // Paspoort/ID-kaart: 1-3 letters + 6-8 digits (e.g. "BH1234567", "ZLN123456")
+  const _DOC_RE = /(?:rijbewijs\b.{0,40}?\b(\d{8,10})\b|(?:paspoort|identiteitskaart|identiteitsbewijs)\b.{0,40}?\b([A-Z]{1,3}\d{6,8})\b)/gi;
+  const foundDocNums = []; // { num, context }
+  const _allTexts = [];
+  // Collect all text sources
+  for (const entry of logEntries) { if (hasFlag(entry.action, IDDOC_KEYWORDS)) _allTexts.push({ text: entry.action, label: entry.date || 'Log' }); }
+  for (const [k, v] of Object.entries(rec)) {
+    if (k === 'SObjectLog__c') continue;
+    if (typeof v !== 'string' || !v) continue;
+    const plain = _stripHtml(v);
+    if (hasFlag(plain, IDDOC_KEYWORDS)) _allTexts.push({ text: plain, label: k.replace(/_/g,' ') });
+  }
+  for (const { text, label } of _allTexts) {
+    _DOC_RE.lastIndex = 0;
+    let m;
+    while ((m = _DOC_RE.exec(text)) !== null) {
+      const num = m[1] || m[2]; // group 1 = rijbewijs (digits), group 2 = paspoort (letters+digits)
+      if (num && !foundDocNums.find(d => d.num === num)) {
+        foundDocNums.push({ num, label });
+      }
+    }
+  }
+  const idDocAll = _allTexts; // for log tag auto-expand (still used below)
+
+  // ── BSN: scan all text fields for "BSNnummer : 123456789" pattern ──────
+  // Elfproef validation: 9*d1+8*d2+...+2*d8-1*d9 must be divisible by 11
+  function _elfproef(s) {
+    const d = s.split('').map(Number);
+    const w = [9,8,7,6,5,4,3,2,-1];
+    return d.reduce((sum,v,i) => sum + v*w[i], 0) % 11 === 0;
+  }
+  const _BSN_RE = /\bBSN[a-z .:]*([0-9]{9})\b/gi;
+  const foundBSNs = [];
+  const _bsnSources = [];
+  for (const entry of logEntries) {
+    if (/BSN/i.test(entry.action)) _bsnSources.push({ text: entry.action, label: entry.date || 'Log' });
+  }
+  for (const [k, v] of Object.entries(rec)) {
+    if (k === 'SObjectLog__c') continue;
+    if (typeof v !== 'string' || !v) continue;
+    const plain = _stripHtml(v);
+    if (/BSN/i.test(plain)) _bsnSources.push({ text: plain, label: k.replace(/_/g,' ') });
+  }
+  for (const { text, label } of _bsnSources) {
+    _BSN_RE.lastIndex = 0;
+    let m;
+    while ((m = _BSN_RE.exec(text)) !== null) {
+      const num = m[1];
+      if (num && _elfproef(num) && !foundBSNs.find(b => b.num === num)) {
+        foundBSNs.push({ num, label });
+      }
+    }
+  }
+
+  // ── Overlijden banner ─────────────────────────────────────────────────
+  if (deadEntries.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section dead';
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'special-title';
+    titleDiv.textContent = '✝ Overlijdensinformatie';
+    b.appendChild(titleDiv);
+
+    // Extract clean death info per entry: date, direction, reason
+    deadEntries.forEach(entry => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:12px;align-items:baseline;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(242,95,92,.15)';
+
+      if (entry.date) {
+        const dt = document.createElement('span');
+        dt.style.cssText = 'color:#f87171;font-weight:600;font-size:13px;white-space:nowrap';
+        dt.textContent = entry.date;
+        row.appendChild(dt);
+      }
+
+      // Extract reason: look for text after "Overlijden" keyword or show direction info
+      const actionLower = entry.action.toLowerCase();
+      let reason = '';
+      // Try to find reason in the action text around the keyword
+      for (const kw of ['overlijden', 'overled', 'gestorven', 'nabestaand']) {
+        const idx = actionLower.indexOf(kw);
+        if (idx >= 0) {
+          // Get context around the keyword (skip the keyword itself)
+          const after = entry.action.substring(idx + kw.length).replace(/^[\s\-:,]+/, '').trim();
+          const before = entry.action.substring(Math.max(0, idx - 60), idx).trim();
+          // The direction/action often contains useful info like "Beeindigen/TMT - Overlijden"
+          if (before) {
+            const lastDash = before.lastIndexOf(' - ');
+            reason = lastDash >= 0 ? before.substring(lastDash + 3).trim() : before;
+          }
+          if (after && after.length < 100) reason += (reason ? ' — ' : '') + after;
+          break;
+        }
+      }
+
+      const info = document.createElement('div');
+      info.style.cssText = 'display:flex;flex-direction:column;gap:2px';
+
+      const label = document.createElement('span');
+      label.style.cssText = 'color:#fca5a5;font-size:13px;font-weight:500';
+      label.textContent = 'Overlijden geregistreerd' + (entry.direction ? ` (${entry.direction})` : '');
+      info.appendChild(label);
+
+      if (reason) {
+        const reasonEl = document.createElement('span');
+        reasonEl.style.cssText = 'color:#94a3b8;font-size:12px';
+        reasonEl.textContent = reason;
+        info.appendChild(reasonEl);
+      }
+
+      if (entry.agent && entry.agent !== 'system') {
+        const agentEl = document.createElement('span');
+        agentEl.style.cssText = 'color:#64748b;font-size:11px';
+        agentEl.textContent = 'Agent: ' + entry.agent;
+        info.appendChild(agentEl);
+      }
+
+      row.appendChild(info);
+      b.appendChild(row);
+    });
+
+    frag.appendChild(b);
+  }
+
+  // ── Person card ───────────────────────────────────────────────────────
+  const name   = rec['Name'] || '—';
+  const status = rec['vlocity_cmt__Status__c'] || rec['Status__c'] || '';
+  const segment = rec['Segment__c'] || rec['Segment_Indicator__c'] || rec['Account_Segment_Indicator__c'] || '';
+  const brand   = rec['Brand_Type__c'] || rec['Brand__c'] || rec['brand'] || '';
+  const isActive = rec['IsActive'];
+  const isVip    = rec['VIP_Customer__c'];
+
+  const card = document.createElement('div');
+  card.className = 'person-card';
+  let badgesHtml = '';
+  if (status)   badgesHtml += `<span class="person-badge" style="color:${status.toLowerCase()==='active'?'var(--green)':'var(--sub)'};">${esc(status)}</span>`;
+  if (segment)  badgesHtml += `<span class="person-badge" style="color:var(--accent)">${esc(segment)}</span>`;
+  if (brand)    badgesHtml += `<span class="person-badge" style="color:var(--orange)">${esc(brand)}</span>`;
+  if (isVip === 'true' || isVip === true) badgesHtml += `<span class="person-badge" style="color:#fbbf24">⭐ VIP</span>`;
+  if (isActive === 'false' || isActive === false) badgesHtml += `<span class="person-badge" style="color:var(--red)">Inactief</span>`;
+  // Deceased/active conflict: if log mentions death but status shows Active
+  const isStatusActive = status.toLowerCase() === 'active' || status.toLowerCase() === 'actief';
+  if (deadEntries.length > 0 && isStatusActive) {
+    badgesHtml += `<span class="person-badge" style="color:#f25f5c;border-color:#f25f5c55;background:rgba(242,95,92,.08)" title="Overlijden geregistreerd in activiteitenlog, maar status staat op Actief">⚠ Status mogelijk onjuist</span>`;
+  }
+  card.innerHTML = `<div class="person-name">${esc(name)}</div><div class="person-badges">${badgesHtml}</div>`;
+  frag.appendChild(card);
+
+  // ── Contact + Address two-column ──────────────────────────────────────
+  const phones = getAllPhones(rec);
+  const emails = getAllEmails(rec);
+  const street  = rec['BillingStreet']  || rec['Street_Address__c'] || '';
+  const houseNo = rec['House_Number__c'] || '';
+  const houseEx = rec['House_Number_Extension__c'] || '';
+  const city    = rec['BillingCity']    || rec['City__c']   || '';
+  const postal  = rec['BillingPostalCode'] || rec['Postal_Code__c'] || '';
+  const country = rec['BillingCountry'] || '';
+
+  const colGrid = document.createElement('div');
+  colGrid.className = 'info-2col';
+
+  // Contact section
+  const contactSec = document.createElement('div');
+  contactSec.className = 'info-section';
+  let contactHtml = `<div class="info-section-title">📞 Contactgegevens</div>`;
+  if (phones.length) {
+    phones.forEach(p => {
+      contactHtml += `<div class="info-row">
+        <span class="info-label">${esc(p.label)}</span>
+        <span class="info-val big">${esc(p.value)}</span>
+      </div>`;
+    });
+  } else {
+    contactHtml += `<div class="info-row"><span class="info-val empty">Geen telefoonnummer</span></div>`;
+  }
+  if (emails.length) {
+    emails.forEach(e => {
+      contactHtml += `<div class="info-row">
+        <span class="info-label">${esc(e.label)}</span>
+        <span class="info-val">${esc(e.value)}</span>
+      </div>`;
+    });
+  } else {
+    contactHtml += `<div class="info-row"><span class="info-val empty">Geen e-mailadres</span></div>`;
+  }
+  contactSec.innerHTML = contactHtml;
+  colGrid.appendChild(contactSec);
+
+  // Address section
+  const addrSec = document.createElement('div');
+  addrSec.className = 'info-section';
+  const fullStreet = [street, houseNo, houseEx].filter(Boolean).join(' ');
+  const fullCity   = [postal, city].filter(Boolean).join(' ');
+  let addrHtml = `<div class="info-section-title">🏠 Woonadres</div>`;
+  if (fullStreet || fullCity || country) {
+    if (fullStreet) addrHtml += `<div class="info-row"><span class="info-val big">${esc(fullStreet)}</span></div>`;
+    if (fullCity)   addrHtml += `<div class="info-row"><span class="info-val">${esc(fullCity)}</span></div>`;
+    if (country)    addrHtml += `<div class="info-row"><span class="info-val" style="color:var(--sub)">${esc(country)}</span></div>`;
+  } else {
+    addrHtml += `<div class="info-row"><span class="info-val empty">Geen adres</span></div>`;
+  }
+  addrSec.innerHTML = addrHtml;
+  colGrid.appendChild(addrSec);
+  frag.appendChild(colGrid);
+
+  // ── Personal info + ID document (Contact records) ─────────────────────
+  const _birthdate   = rec['Birthdate'] || rec['BirthDate__c'] || '';
+  const _gender      = rec['Gender__c'] || rec['vlocity_cmt__Gender__c'] || '';
+  const _nationality = rec['Nationality__c'] || '';
+  const _idNumber    = rec['ID_number__c'] || '';
+  const _idType      = rec['ID_type__c'] || '';
+  const _idValid     = rec['ID_valid__c'] || '';
+  const _initials    = rec['Initials__c'] || '';
+  const _firstName   = rec['FirstName'] || '';
+  const _lastName    = rec['LastName'] || '';
+
+  if (_birthdate || _gender || _nationality || _idNumber) {
+    const personGrid = document.createElement('div');
+    personGrid.className = 'info-2col';
+
+    // Personal details section
+    const persInfoSec = document.createElement('div');
+    persInfoSec.className = 'info-section';
+    let persHtml = `<div class="info-section-title">👤 Persoonsgegevens</div>`;
+    if (_firstName || _lastName) persHtml += `<div class="info-row"><span class="info-label">Voornaam</span><span class="info-val">${esc(_firstName)}</span></div>`;
+    if (_lastName) persHtml += `<div class="info-row"><span class="info-label">Achternaam</span><span class="info-val">${esc(_lastName)}</span></div>`;
+    if (_initials) persHtml += `<div class="info-row"><span class="info-label">Initialen</span><span class="info-val">${esc(_initials)}</span></div>`;
+    if (_birthdate) persHtml += `<div class="info-row"><span class="info-label">Geboortedatum</span><span class="info-val big">${esc(_birthdate)}</span></div>`;
+    if (_gender) persHtml += `<div class="info-row"><span class="info-label">Geslacht</span><span class="info-val">${esc(_gender === 'Male' ? 'Man' : _gender === 'Female' ? 'Vrouw' : _gender)}</span></div>`;
+    if (_nationality) persHtml += `<div class="info-row"><span class="info-label">Nationaliteit</span><span class="info-val">${esc(_nationality)}</span></div>`;
+    persInfoSec.innerHTML = persHtml;
+    personGrid.appendChild(persInfoSec);
+
+    // ID document section
+    if (_idNumber) {
+      const idDocSec = document.createElement('div');
+      idDocSec.className = 'info-section';
+      const idTypeLabel = _idType === 'Paspoort' ? '🛂 Paspoort'
+        : _idType === 'Rijbewijs' ? '🪪 Rijbewijs'
+        : _idType === 'Europees ID' ? '🪪 Europees ID'
+        : '🛂 ' + (_idType || 'ID Document');
+      let idHtml = `<div class="info-section-title">${idTypeLabel}</div>`;
+      idHtml += `<div class="info-row"><span class="info-label">Nummer</span><span class="info-val mono big" style="color:#38bdf8;font-weight:700">${esc(_idNumber)}</span></div>`;
+      if (_idType) idHtml += `<div class="info-row"><span class="info-label">Type</span><span class="info-val">${esc(_idType)}</span></div>`;
+      if (_idValid) idHtml += `<div class="info-row"><span class="info-label">Geldig tot</span><span class="info-val">${esc(_idValid)}</span></div>`;
+      const _idStatus = rec['Identification_Validation_Status__c'] || '';
+      if (_idStatus) idHtml += `<div class="info-row"><span class="info-label">Validatie</span><span class="info-val">${esc(_idStatus)}</span></div>`;
+      idDocSec.innerHTML = idHtml;
+      personGrid.appendChild(idDocSec);
+    }
+
+    frag.appendChild(personGrid);
+  }
+
+  // ── Financial (IBAN) ──────────────────────────────────────────────────
+  const iban      = rec['Bank_Account_Number__c'] || rec['IBAN__c'] || rec['iban'] || '';
+  const ibanName  = rec['Bank_Account_Holder_Name__c'] || '';
+  const payMethod = rec['Payment_Method__c'] || rec['vlocity_cmt__AccountPaymentType__c'] || '';
+  if (iban || ibanName) {
+    const finSec = document.createElement('div');
+    finSec.className = 'info-section';
+    let finHtml = `<div class="info-section-title">🏦 Bankgegevens / IBAN</div>`;
+    if (iban) finHtml += `<div class="info-row">
+      <span class="info-label">IBAN</span>
+      <span class="info-val mono big">${esc(iban)}</span>
+    </div>`;
+    if (ibanName) finHtml += `<div class="info-row">
+      <span class="info-label">Rekeninghouder</span>
+      <span class="info-val">${esc(ibanName)}</span>
+    </div>`;
+    if (payMethod) finHtml += `<div class="info-row">
+      <span class="info-label">Betaalmethode</span>
+      <span class="info-val">${esc(payMethod)}</span>
+    </div>`;
+    finSec.innerHTML = finHtml;
+    frag.appendChild(finSec);
+  }
+
+  // ── KvK / BTW (business info) ─────────────────────────────────────────
+  const kvkNum  = rec['KvK_Number__c'] || rec['Chamber_Of_Commerce_Number__c'] || '';
+  const taxId   = rec['Tax_ID__c'] || '';
+  if (kvkNum || taxId) {
+    const kvkSec = document.createElement('div');
+    kvkSec.className = 'info-section';
+    let kvkHtml = `<div class="info-section-title">🏢 Bedrijfsgegevens</div>`;
+    if (kvkNum) kvkHtml += `<div class="info-row">
+      <span class="info-label">KvK Nummer</span>
+      <span class="info-val mono big" style="color:#38bdf8;font-weight:700">${esc(kvkNum)}</span>
+    </div>`;
+    if (taxId) kvkHtml += `<div class="info-row">
+      <span class="info-label">BTW Nummer</span>
+      <span class="info-val mono">${esc(taxId)}</span>
+    </div>`;
+    kvkSec.innerHTML = kvkHtml;
+    frag.appendChild(kvkSec);
+  }
+
+  // ── Customer ID ───────────────────────────────────────────────────────
+  const custId = rec['Id'] || rec['AccountNumber'] || rec['Siebel_Customer_ID__c'] || '';
+  if (custId) {
+    const idSec = document.createElement('div');
+    idSec.className = 'info-section';
+    idSec.innerHTML = `<div class="info-section-title">🆔 Klantidentificatie</div>
+      <div class="info-row"><span class="info-label">Klant ID</span><span class="info-val mono" style="font-size:11px">${esc(custId)}</span></div>`;
+    frag.appendChild(idSec);
+  }
+
+  // ── Aanmaningen / Sommaties ───────────────────────────────────────────
+  if (summonEntries.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section summons';
+    const title = document.createElement('div');
+    title.className = 'special-title';
+    title.textContent = `📬 Summons / Sommaties (${summonEntries.length})`;
+    b.appendChild(title);
+    // Show latest 3
+    summonEntries.slice(-3).reverse().forEach(entry => {
+      const txt = document.createElement('div');
+      txt.className = 'special-text';
+      txt.style.marginBottom = '8px';
+      txt.style.borderBottom = '1px solid rgba(247,164,79,.2)';
+      txt.style.paddingBottom = '8px';
+      txt.textContent = (entry.date ? entry.date + ' — ' : '') + entry.action;
+      b.appendChild(txt);
+    });
+    if (summonEntries.length > 3) {
+      const more = document.createElement('div');
+      more.style.cssText = 'font-size:11px;color:var(--orange);opacity:.7;';
+      more.textContent = `+ ${summonEntries.length-3} meer – zie activiteitenlog`;
+      b.appendChild(more);
+    }
+    frag.appendChild(b);
+  }
+
+  // ── Identiteitsdocumenten — toon nummers of, bij geen nummer, de vermeldingen ──
+  if (foundDocNums.length > 0 || _allTexts.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section iddoc';
+    let html = `<div class="special-title">🛂 Identiteitsdocumenten</div>`;
+    if (foundDocNums.length > 0) {
+      foundDocNums.forEach(({ num, label }) => {
+        html += `<div class="info-row">
+          <span class="info-label" style="color:#38bdf8">${esc(label)}</span>
+          <span class="info-val mono" style="color:#a0d8ef;font-size:15px;font-weight:700">${esc(num)}</span>
+        </div>`;
+      });
+    } else {
+      html += `<div style="color:#94a3b8;font-size:12px;margin-bottom:6px">Geen documentnummer gevonden — vermeldingen:</div>`;
+      _allTexts.forEach(({ text, label }) => {
+        const lower = text.toLowerCase();
+        const kwIdx = IDDOC_KEYWORDS.map(k => lower.indexOf(k)).find(i => i >= 0) ?? 0;
+        const start = Math.max(0, kwIdx - 40);
+        const end = Math.min(text.length, kwIdx + 200);
+        const snippet = (start > 0 ? '\u2026' : '') + text.slice(start, end).trim() + (end < text.length ? '\u2026' : '');
+        html += `<div class="info-row" style="flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:4px">
+          <span class="info-label" style="color:#38bdf8">${esc(label)}</span>
+          <span style="color:#a0d8ef;font-size:12px;white-space:pre-wrap;line-height:1.4">${esc(snippet)}</span>
+        </div>`;
+      });
+    }
+    b.innerHTML = html;
+    frag.appendChild(b);
+  }
+
+  // ── BSN — alleen tonen als er een geldig BSN (elfproef) gevonden is ────
+  if (foundBSNs.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section bsn';
+    let html = `<div class="special-title">🪪 BSN / Burgerservicenummer</div>`;
+    foundBSNs.forEach(({ num, label }) => {
+      html += `<div class="info-row">
+        <span class="info-label" style="color:#818cf8">${esc(label)}</span>
+        <span class="info-val mono" style="color:#c7d2fe;font-size:15px;font-weight:700">${esc(num)}</span>
+      </div>`;
+    });
+    b.innerHTML = html;
+    frag.appendChild(b);
+  }
+
+  // ── Wachtwoorden ──────────────────────────────────────────────────────
+  const passwords = getAllPasswords(rec);
+  if (passwords.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section password';
+    let html = `<div class="special-title">🔑 Accountwachtwoorden</div>`;
+    passwords.forEach(p => {
+      html += `<div class="info-row">
+        <span class="info-label" style="color:#b4a0ff">${esc(p.label)}</span>
+        <span class="info-val mono" style="color:#c4b0ff;font-size:14px">${esc(p.value)}</span>
+      </div>`;
+    });
+    b.innerHTML = html;
+    frag.appendChild(b);
+  }
+
+  // ── App-Pincodes ───────────────────────────────────────────────────────
+  const pincodes = getAllPincodes(rec);
+  if (pincodes.length > 0) {
+    const b = document.createElement('div');
+    b.className = 'special-section password';
+    let html = `<div class="special-title">🔢 App PINs</div>`;
+    pincodes.forEach(p => {
+      html += `<div class="info-row">
+        <span class="info-label" style="color:#b4a0ff">${esc(p.label)}</span>
+        <span class="info-val mono" style="color:#c4b0ff;font-size:14px">${esc(p.value)}</span>
+      </div>`;
+    });
+    b.innerHTML = html;
+    frag.appendChild(b);
+  }
+
+  // ── Activiteitenlog ───────────────────────────────────────────────────
+  if (logEntries.length > 0) {
+    const LOG_INITIAL = 10;
+    const logSec = document.createElement('div');
+    logSec.className = 'log-section';
+    logSec.innerHTML = `<div class="log-section-title">📝 Klantenservice Activiteitenlog (${logEntries.length} items)</div>`;
+    const timeline = document.createElement('div');
+    timeline.className = 'log-timeline';
+    const reversed = [...logEntries].reverse();
+    reversed.forEach((entry, i) => {
+      const el = buildLogEntryEl(entry);
+      // Auto-expand entries with important tags so they're visible without a click
+      if (hasFlag(entry.action, DEAD_KEYWORDS) || hasFlag(entry.action, SUMMON_KEYWORDS) || hasFlag(entry.action, WARN_KEYWORDS) || hasFlag(entry.action, IDDOC_KEYWORDS)) {
+        el.classList.add('expanded');
+      }
+      if (i >= LOG_INITIAL) el.style.display = 'none';
+      timeline.appendChild(el);
+    });
+    logSec.appendChild(timeline);
+    if (reversed.length > LOG_INITIAL) {
+      let shown = false;
+      const showMore = document.createElement('div');
+      showMore.className = 'log-show-more';
+      showMore.textContent = `▼ Toon alle ${reversed.length} items`;
+      showMore.addEventListener('click', () => {
+        shown = !shown;
+        timeline.querySelectorAll('.log-entry').forEach((el, i) => {
+          if (i >= LOG_INITIAL) el.style.display = shown ? '' : 'none';
+        });
+        showMore.textContent = shown ? `▲ Minder tonen` : `▼ Toon alle ${reversed.length} items`;
+      });
+      logSec.appendChild(showMore);
+    }
+    frag.appendChild(logSec);
+  }
+
+  // ── All other fields (collapsible) ────────────────────────────────────
+  const usedKeys = new Set([
+    'Flash_Message__c','SObjectLog__c','Name','Phone','MobilePhone','HomePhone','OtherPhone',
+    'Mobile__c','PhoneNumber__c','Telephone__c','TelephoneNumber__c','ContactPhone__c',
+    'vlocity_cmt__BillingEmailAddress__c','Email','Email__c','PersonEmail','Contact_Email__c',
+    'EmailAddress__c','Personal_Email__c','BillingEmail',
+    'Bank_Account_Number__c','Bank_Account_Holder_Name__c','IBAN__c','iban',
+    'Payment_Method__c','vlocity_cmt__AccountPaymentType__c',
+    'BillingStreet','House_Number__c','House_Number_Extension__c','BillingCity',
+    'BillingPostalCode','BillingCountry','Street_Address__c','City__c','Postal_Code__c',
+    'vlocity_cmt__Status__c','Segment__c','Segment_Indicator__c','Brand_Type__c','Brand__c',
+    'Account_Segment_Indicator__c',
+    'IsActive','VIP_Customer__c','Id','AccountNumber','Siebel_Customer_ID__c',
+    // KvK / BTW (shown in dedicated section above)
+    'KvK_Number__c','Chamber_Of_Commerce_Number__c','Tax_ID__c',
+    // Contact personal info (shown in dedicated section)
+    'FirstName','LastName','MiddleName','Salutation','Birthdate','BirthDate__c',
+    'Gender__c','vlocity_cmt__Gender__c','Nationality__c','Initials__c',
+    'ID_number__c','ID_type__c','ID_valid__c','Identification_Validation_Status__c',
+  ]);
+  // Add password keys we displayed
+  passwords.forEach(p => { for(const k of Object.keys(rec)) { if(friendlyName(k)===p.label) usedKeys.add(k); } });
+
+  const allGroups = [
+    { title: 'Algemeen', keys: [
+        'Type','AccountSource','RecordTypeId','Customer_Type__c','Business_Type__c','Is_B2B_Account__c',
+        'Sales_Channel__c','UserProfile__c','Customer_Level__c',
+    ]},
+    { title: 'Extra contactgegevens', keys: [
+        'Fax','Website','coosto__WhatsApp_Id__c','coosto__Facebook_Id__c',
+        'coosto__Twitter_Id__c','coosto__Instagram_Id__c','coosto__LinkedIn_Id__c',
+    ]},
+    { title: 'Verzendadres', keys: [
+        'ShippingStreet','ShippingCity','ShippingPostalCode','ShippingState','ShippingCountry',
+    ]},
+    { title: 'Identiteit & ID\'s', keys: [
+        'Account_Salesforce_ID__c','Customer_Code_Legacy_System__c','SourceSystemIdentifier',
+        'External_Reference_Number__c','Sugar_Contact_Id__c',
+        'vlocity_cmt__PartyId__c','vlocity_cmt__PremisesId__c',
+    ]},
+    { title: 'Financieel', keys: [
+        'Bank_Details_Check__c','Payment_Terms__c','Bill_Day__c','Paper_Invoice__c',
+        'vlocity_cmt__BillCycle__c','vlocity_cmt__BillFormat__c',
+        'vlocity_cmt__CreditRating__c','vlocity_cmt__CreditScore__c','AnnualRevenue',
+        'vlocity_cmt__AutoPaymentAmount__c','vlocity_cmt__AutoPaymentCardType__c',
+        'vlocity_cmt__EnableAutopay__c','vlocity_cmt__BillingEmailAddress__c',
+    ]},
+    { title: 'Abonnementen', keys: [
+        'Total_Subscriptions__c','NumberOfVoiceSubscription__c','Financial_Subscriptions__c',
+        'Data_Subscriptions__c','Num_Active_Assets__c','Num_of_Assets_LifeCycle__c',
+    ]},
+    { title: 'Datums', keys: [
+        'CreatedDate','LastModifiedDate','LastActivityDate','InactivationDate__c',
+        'Activation_Date__c','Contract_Sign_Date__c','vlocity_cmt__CustomerSinceDate__c',
+    ]},
+    { title: 'Accountinstellingen', keys: [
+        'IsCustomerPortal','IsPartner','OwnerId','Dealer_Code__c','Account_shielding__c',
+        'Has_Insurance__c','HasSensitivityDataPermission__c','vlocity_cmt__HasFraud__c',
+        'Block_Status__c',
+    ]},
+    { title: 'Toestemming & Privacy', keys: [
+        'Use_Personal_Data__c','Use_Personal_Data_Channels__c',
+        'Commercial_offering__c','Commercial_offering_channels__c',
+        'Newsletter__c','Newsletter_channels__c',
+        'Third_party_offerings__c','Third_party_offerings_channels__c',
+        'Use_location_data__c','Use_research_data__c','Use_usage_data__c',
+        'Telemarketing_Opt_in__c',
+    ]},
+    { title: 'Portaal & Gebruiker', keys: [
+        'Username__c','Is_Portal_User__c','IsSignee__c',
+        'Receiving_Username__c','Receiving_Reset_Password_User_Name__c',
+        'AccountId','Person_ID__c','Infonova_Id__c',
+    ]},
+  ];
+
+  const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'collapse-toggle';
+  toggleBtn.innerHTML = '<span>📋 Alle overige gegevens</span><span class="chevron">▼</span>';
+  const collapseDiv = document.createElement('div');
+  collapseDiv.className = 'collapse-content';
+
+  const fieldGrid = document.createElement('div');
+  fieldGrid.className = 'field-grid';
+
+  let hasAny = false;
+  for (const { title, keys } of allGroups) {
+    const visibleKeys = keys.filter(k => rec[k]!==undefined && rec[k]!=='' && rec[k]!==null && !usedKeys.has(k));
+    if (!visibleKeys.length) continue;
+    hasAny = true;
+    const st = document.createElement('div');
+    st.className = 'section-title';
+    st.textContent = title;
+    fieldGrid.appendChild(st);
+    visibleKeys.forEach(k => { usedKeys.add(k); addFieldItem(fieldGrid, k, rec[k]); });
+  }
+
+  // Remaining fields not in any group
+  const remaining = Object.keys(rec).filter(k =>
+    !usedKeys.has(k) && rec[k]!=='' && rec[k]!==null && rec[k]!==undefined
+    && k !== 'attributes_type'
+  );
+  if (remaining.length) {
+    hasAny = true;
+    const st = document.createElement('div');
+    st.className = 'section-title';
+    st.textContent = 'Overige velden';
+    fieldGrid.appendChild(st);
+    remaining.forEach(k => addFieldItem(fieldGrid, k, rec[k]));
+  }
+
+  if (hasAny) {
+    toggleBtn.addEventListener('click', () => {
+      toggleBtn.classList.toggle('open');
+      collapseDiv.classList.toggle('open');
+    });
+    collapseDiv.appendChild(fieldGrid);
+    frag.appendChild(toggleBtn);
+    frag.appendChild(collapseDiv);
+  }
+
+  modalContent.innerHTML = '';
+  modalContent.appendChild(frag);
 }
 
 function addFieldItem(container, key, val) {
-  const display = (val === '' || val === null || val === undefined) ? '—' : String(val);
-
-  // Special rendering for activity log (SObjectLog__c)
-  if (key === 'SObjectLog__c') {
-    renderActivityLog(container, display);
-    return;
-  }
-
-  // Standard rendering
-  const clean = display.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() || '—';
+  const display = (val===''||val===null||val===undefined) ? '—' : String(val);
+  if (key === 'SObjectLog__c') return; // handled separately
+  const clean = display.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim() || '—';
   const item  = document.createElement('div');
   item.className = 'field-item';
   item.innerHTML = `
     <div class="field-label">${esc(friendlyName(key))}</div>
-    <div class="field-value${clean === '—' ? ' empty' : ''}">${esc(clean)}</div>
+    <div class="field-value${clean==='—'?' empty':''}">${esc(clean)}</div>
   `;
   container.appendChild(item);
 }
 
 function friendlyName(k) {
   const map = {
-    'Id':                                    'Customer ID',
-    'Name':                                  'Name',
-    'Phone':                                 'Phone',
-    'MobilePhone':                           'Mobile',
-    'HomePhone':                             'Home phone',
+    'Id':                                    'Klant ID',
+    'Name':                                  'Naam',
+    'Phone':                                 'Telefoon',
+    'MobilePhone':                           'Mobiel',
+    'HomePhone':                             'Vaste lijn',
+    'OtherPhone':                            'Overig telefoon',
     'Fax':                                   'Fax',
-    'BillingStreet':                         'Street',
-    'BillingCity':                           'City',
-    'BillingPostalCode':                     'Postal code',
-    'BillingState':                          'State/Province',
-    'BillingCountry':                        'Country',
-    'House_Number__c':                       'House no.',
-    'House_Number_Extension__c':             'House no. extension',
-    'vlocity_cmt__BillingEmailAddress__c':   'Email address',
-    'Email':                                 'Email address',
+    'BillingStreet':                         'Straat',
+    'BillingCity':                           'Stad',
+    'BillingPostalCode':                     'Postcode',
+    'BillingState':                          'Provincie',
+    'BillingCountry':                        'Land',
+    'House_Number__c':                       'Huisnummer',
+    'House_Number_Extension__c':             'Huisnummer toevoeging',
+    'vlocity_cmt__BillingEmailAddress__c':   'E-mailadres',
+    'Email':                                 'E-mailadres',
+    'Email__c':                              'E-mailadres',
+    'PersonEmail':                           'E-mailadres (persoon)',
     'vlocity_cmt__Status__c':                'Status',
-    'IsActive':                              'Active',
-    'CreatedDate':                           'Created on',
-    'LastModifiedDate':                      'Last modified',
-    'InactivationDate__c':                   'Deactivated on',
+    'IsActive':                              'Actief',
+    'CreatedDate':                           'Aangemaakt op',
+    'LastModifiedDate':                      'Laatst gewijzigd',
+    'InactivationDate__c':                   'Gedeactiveerd op',
     'Segment__c':                            'Segment',
-    'Brand_Type__c':                         'Brand',
-    'IsCustomerPortal':                      'Customer portal',
-    'VIP_Customer__c':                       'VIP Customer',
-    'AccountSource':                         'Source',
-    'Sales_Channel__c':                      'Sales channel',
-    'Is_B2B_Account__c':                     'B2B Account',
+    'Brand_Type__c':                         'Merk',
+    'IsCustomerPortal':                      'Klantportaal',
+    'VIP_Customer__c':                       'VIP Klant',
+    'AccountSource':                         'Bron',
+    'Sales_Channel__c':                      'Verkoopkanaal',
+    'Is_B2B_Account__c':                     'Zakelijk (B2B)',
     'Bank_Account_Number__c':                'IBAN',
-    'Bank_Account_Holder_Name__c':           'Account holder',
-    'Payment_Method__c':                     'Payment method',
-    'Flash_Message__c':                      'Warning',
-    'SObjectLog__c':                         'Activity log',
-    'Total_Subscriptions__c':                'Total subscriptions',
-    'NumberOfVoiceSubscription__c':          'Voice subscriptions',
-    'KvK_Number__c':                         'KvK number',
-    'Tax_ID__c':                             'VAT number',
+    'Bank_Account_Holder_Name__c':           'Rekeninghouder',
+    'Payment_Method__c':                     'Betaalmethode',
+    'Flash_Message__c':                      'Flitsbericht',
+    'SObjectLog__c':                         'Activiteitenlog',
+    'Total_Subscriptions__c':                'Totaal abonnementen',
+    'NumberOfVoiceSubscription__c':          'Spraakabonnementen',
+    'KvK_Number__c':                         'KvK nummer',
+    'Tax_ID__c':                             'BTW nummer',
+    'Pin__c':                                'Pincode',
+    'Password__c':                           'Wachtwoord',
+    'Portal_Password__c':                    'Portaalwachtwoord',
+    'Wachtwoord__c':                         'Wachtwoord',
+    'Mobile__c':                             'Mobiel',
+    'Telephone__c':                          'Telefoon',
+    'Contact_Email__c':                      'Contact e-mail',
+    'EmailAddress__c':                       'E-mailadres',
+    'IBAN__c':                               'IBAN',
+    'Activation_Date__c':                    'Activatiedatum',
+    'Contract_Sign_Date__c':                 'Contractdatum',
+    'FirstName':                             'Voornaam',
+    'LastName':                              'Achternaam',
+    'MiddleName':                            'Tussenvoegsel',
+    'Salutation':                            'Aanhef',
+    'Birthdate':                             'Geboortedatum',
+    'BirthDate__c':                          'Geboortedatum',
+    'Gender__c':                             'Geslacht',
+    'Nationality__c':                        'Nationaliteit',
+    'ID_number__c':                          'ID Nummer',
+    'ID_type__c':                            'ID Type',
+    'ID_valid__c':                           'ID Geldig tot',
+    'Initials__c':                           'Initialen',
+    'Brand__c':                              'Merk',
+    'Account_Segment_Indicator__c':          'Segment',
+    'Identification_Validation_Status__c':   'ID Validatie',
+    'AccountId':                             'Account ID',
+    'Use_Personal_Data__c':                  'Toestemming persoonsgegevens',
+    'Use_Personal_Data_Channels__c':         'Toestemming kanalen',
+    'Commercial_offering__c':                'Commercieel aanbod',
+    'Newsletter__c':                         'Nieuwsbrief',
+    'Third_party_offerings__c':              'Derden aanbod',
+    'Telemarketing_Opt_in__c':               'Telemarketing',
+    'vlocity_cmt__Gender__c':                'Geslacht',
+    'PhoneNumber__c':                        'Telefoonnummer',
+    'TelephoneNumber__c':                    'Telefoonnummer',
+    'ContactPhone__c':                       'Contacttelefoon',
+    'Personal_Email__c':                     'Persoonlijk e-mail',
+    'BillingEmail':                          'Facturatie e-mail',
   };
   return map[k] || k.replace(/__c$/, '').replace(/_/g, ' ');
 }
 
-// ── UI helpers ─────────────────────────────────────────────────────────────
-function hideAll() {
+// ══════════════════════════════════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════════════════════════════════
+function hideAllSearch() {
   loader.style.display  = 'none';
-  empty.style.display   = 'none';
+  emptyEl.style.display = 'none';
   welcome.style.display = 'none';
   table.style.display   = 'none';
   pager.innerHTML       = '';
 }
-function showLoader() {
-  hideAll();
-  loader.style.display = 'block';
-}
+function showLoader() { hideAllSearch(); loader.style.display = 'block'; }
 function showWelcome() {
-  hideAll();
+  hideAllSearch();
   welcome.style.display = 'block';
   resInfo.textContent   = '';
   expBtn.style.display  = 'none';
-  pager.innerHTML       = '';
 }
 function showError(msg) {
-  hideAll();
-  empty.style.display = 'block';
-  document.getElementById('empty-title').textContent = 'Error';
-  document.getElementById('empty-sub').textContent   = msg || 'Something went wrong.';
+  hideAllSearch();
+  emptyEl.style.display = 'block';
+  document.getElementById('empty-title').textContent = 'Fout';
+  document.getElementById('empty-sub').textContent   = msg || 'Er is iets misgegaan.';
 }
+function hideAllOv() {
+  ovLoader.style.display = 'none';
+  ovEmpty.style.display  = 'none';
+  ovIntro.style.display  = 'none';
+  ovTable.style.display  = 'none';
+  ovPager.innerHTML      = '';
+}
+function showOvLoader() { hideAllOv(); ovLoader.style.display = 'block'; }
+function showOvIntro() {
+  hideAllOv();
+  ovIntro.style.display  = 'block';
+  ovResInfo.textContent  = '';
+  ovExpBtn.style.display = 'none';
+}
+function showOvError(msg) {
+  hideAllOv();
+  ovEmpty.style.display = 'block';
+  document.getElementById('ov-empty-title').textContent = 'Fout';
+  document.getElementById('ov-empty-sub').textContent   = msg || 'Er is iets misgegaan.';
+}
+
 function esc(s) {
   if (!s) return '';
   return String(s)
@@ -1457,134 +2721,126 @@ function esc(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── CSV export ─────────────────────────────────────────────────────────────
-expBtn.addEventListener('click', () => {
-  if (!lastResults.length) return;
-  const headers = ['Name','Street','Postal code','City','Phone','Email','IBAN','Status','Customer ID'];
-  const rows = lastResults.map(r => [
-    r.name, r.street, r.postal, r.city, r.phone, r.email, r.iban, r.status, r.id
+// ══════════════════════════════════════════════════════════════════════════
+//  CSV EXPORT
+// ══════════════════════════════════════════════════════════════════════════
+function exportCsv(rows, filename) {
+  const headers = ['Naam','Straat','Postcode','Stad','Telefoon','E-mail','IBAN','ID Nummer','ID Type','Geboortedatum','Nationaliteit','Status','Klant ID'];
+  const data = rows.map(r => [
+    r.name, r.street, r.postal, r.city, r.phone, r.email, r.iban,
+    r.id_number||'', r.id_type||'', r.birthdate||'', r.nationality||'',
+    r.status, r.id
   ].map(v => `"${(v||'').replace(/"/g,'""')}"`));
-  const csv  = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const csv  = [headers.join(','), ...data.map(r => r.join(','))].join('\r\n');
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8' });
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
-  a.download = `search_results_${Date.now()}.csv`;
+  a.download = filename;
   a.click();
-});
+}
+expBtn.addEventListener('click', () => exportCsv(lastResults,   `zoekresultaten_${Date.now()}.csv`));
+ovExpBtn.addEventListener('click', () => exportCsv(ovLastResults, `overzicht_${Date.now()}.csv`));
 
-// ── Events ─────────────────────────────────────────────────────────────────
-btn.addEventListener('click', () => doSearch(1));
-
-inp.addEventListener('keydown', e => {
-  if (e.key === 'Enter') { clearTimeout(debounceTimer); doSearch(1); }
-});
-
+// ══════════════════════════════════════════════════════════════════════════
+//  SEARCH EVENTS
+// ══════════════════════════════════════════════════════════════════════════
+searchBtn.addEventListener('click', () => doSearch(1));
+inp.addEventListener('keydown', e => { if (e.key==='Enter') { clearTimeout(debounceTimer); doSearch(1); } });
 inp.addEventListener('input', () => {
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
-    if (inp.value.trim().length >= 2) doSearch(1);
+    if (inp.value.trim().length >= 3) doSearch(1);
     else if (!inp.value.trim()) showWelcome();
-  }, 350);
+  }, 400);
 });
+clrBtn.addEventListener('click', () => { inp.value=''; showWelcome(); inp.focus(); });
 
-clrBtn.addEventListener('click', () => {
-  inp.value = '';
-  showWelcome();
-  inp.focus();
-});
-
-// Modal close
+// ══════════════════════════════════════════════════════════════════════════
+//  MODAL EVENTS
+// ══════════════════════════════════════════════════════════════════════════
 modalClose.addEventListener('click', () => overlay.classList.remove('open'));
-overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+overlay.addEventListener('click', e => { if(e.target===overlay) overlay.classList.remove('open'); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
+  if (e.key==='Escape') {
     overlay.classList.remove('open');
-    dbModalOverlay.classList.remove('open');
+    dbModalOvl.classList.remove('open');
   }
 });
 
-// ── Database management modal ───────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════
+//  DATABASE MANAGEMENT MODAL
+// ══════════════════════════════════════════════════════════════════════════
 manageDbBtn.addEventListener('click', () => {
   loadDatabases().then(() => renderDbList(allDatabases));
-  dbModalOverlay.classList.add('open');
+  dbModalOvl.classList.add('open');
 });
-dbModalClose.addEventListener('click', () => dbModalOverlay.classList.remove('open'));
-dbModalOverlay.addEventListener('click', e => {
-  if (e.target === dbModalOverlay) dbModalOverlay.classList.remove('open');
-});
+dbModalClose.addEventListener('click', () => dbModalOvl.classList.remove('open'));
+dbModalOvl.addEventListener('click', e => { if(e.target===dbModalOvl) dbModalOvl.classList.remove('open'); });
 
 function renderDbList(dbs) {
-  if (!dbs || !dbs.length) {
-    dbList.innerHTML = '<p style="color:var(--sub);font-size:13px">No databases found.</p>';
+  if (!dbs||!dbs.length) {
+    dbList.innerHTML = '<p style="color:var(--sub);font-size:13px">Geen databases gevonden.</p>';
     return;
   }
   dbList.innerHTML = '';
   dbs.forEach(db => {
-    const col  = dbColor(db.name);
-    const row  = document.createElement('div');
+    const col = dbColor(db.name);
+    const row = document.createElement('div');
     row.className = 'db-row';
     row.innerHTML = `
       <div class="db-row-dot" style="background:${col}"></div>
       <div class="db-row-info">
-        <div class="db-row-name" id="dbname-${CSS.escape(db.name)}">${esc(db.name)}</div>
-        <div class="db-row-meta">${(db.records||0).toLocaleString('en-US')} records · ${db.sizeMB} MB · ${db.file}</div>
+        <div class="db-row-name">${esc(db.name)}</div>
+        <div class="db-row-meta">${(db.records||0).toLocaleString('nl-NL')} records · ${db.sizeMB} MB · ${esc(db.file)}</div>
       </div>
       <div class="db-row-actions">
-        <button class="db-btn" data-action="rename" data-name="${esc(db.name)}">Rename</button>
+        <button class="db-btn" data-action="rename" data-name="${esc(db.name)}">Hernoemen</button>
         <button class="db-btn danger" data-action="delete" data-name="${esc(db.name)}">Delete</button>
       </div>
     `;
     dbList.appendChild(row);
   });
-
-  // Wire up action buttons
   dbList.querySelectorAll('.db-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const action = btn.dataset.action;
-      const name   = btn.dataset.name;
-      if (action === 'rename') renameDb(name);
-      if (action === 'delete') deleteDb(name);
+      if (btn.dataset.action==='rename') renameDb(btn.dataset.name);
+      if (btn.dataset.action==='delete') deleteDb(btn.dataset.name);
     });
   });
 }
 
 function renameDb(oldName) {
-  const newName = prompt(`New name for "${oldName}":`, oldName);
-  if (!newName || newName === oldName) return;
+  const newName = prompt(`Nieuwe naam voor "${oldName}":`, oldName);
+  if (!newName||newName===oldName) return;
   fetch(`/api/databases/rename?old=${encodeURIComponent(oldName)}&new=${encodeURIComponent(newName)}`)
-    .then(r => r.json())
-    .then(d => {
-      if (d.error) { alert('Error: ' + d.error); return; }
-      // Update active filter set
-      if (activeDbNames.has(oldName)) {
-        activeDbNames.delete(oldName);
-        activeDbNames.add(newName);
-      }
+    .then(r=>r.json()).then(d => {
+      if (d.error) { alert('Fout: '+d.error); return; }
+      if (activeDbNames.has(oldName)) { activeDbNames.delete(oldName); activeDbNames.add(newName); }
+      citiesLoaded = false;
       loadDatabases();
       if (currentQ) doSearch(currentPage);
-    })
-    .catch(e => alert('Error renaming: ' + e));
+    }).catch(e => alert('Fout bij hernoemen: '+e));
 }
 
 function deleteDb(name) {
-  if (!confirm(`Permanently delete database "${name}"?\n\nThe .db file will be deleted. This cannot be undone.`)) return;
+  if (!confirm(`Database "${name}" permanent verwijderen?\n\nHet .db bestand wordt verwijderd. Dit kan niet ongedaan worden gemaakt.`)) return;
   fetch(`/api/databases/delete?name=${encodeURIComponent(name)}`)
-    .then(r => r.json())
-    .then(d => {
-      if (d.error) { alert('Error: ' + d.error); return; }
+    .then(r=>r.json()).then(d => {
+      if (d.error) { alert('Fout: '+d.error); return; }
       activeDbNames.delete(name);
-      if (activeDbNames.size === 0) {
-        // Enable all remaining
-        allDatabases.filter(db => db.name !== name).forEach(db => activeDbNames.add(db.name));
-      }
+      if (activeDbNames.size===0)
+        allDatabases.filter(db=>db.name!==name).forEach(db=>activeDbNames.add(db.name));
+      citiesLoaded = false;
       loadDatabases();
       if (currentQ) doSearch(1);
-    })
-    .catch(e => alert('Error deleting: ' + e));
+    }).catch(e => alert('Fout bij verwijderen: '+e));
 }
 
-// Auto-focus search box
+// ══════════════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════════════
 inp.focus();
+// Start loading filter counts in background so they're ready when user opens overview
+setTimeout(loadFilterCounts, 1000);
 </script>
 </body>
 </html>

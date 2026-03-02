@@ -40,13 +40,16 @@ exit /b 1
 cls
 echo.
 echo  ==========================================
-echo    UnknownDatabase Scanner
+echo    UnknownDatabase Scanner Beta V2.0
 echo  ==========================================
+echo.
+"%PYTHON%" check_version.py 2>nul
 echo.
 echo    1.  Start scanner
 echo    2.  Import database
 echo    3.  Delete database
 echo    4.  Migrate database (one-time after update)
+echo    5.  Recount filter statistics (fix filter counts)
 echo.
 echo    0.  Exit
 echo.
@@ -56,6 +59,7 @@ if "%KEUZE%"=="1" goto :start_scanner
 if "%KEUZE%"=="2" goto :import_db
 if "%KEUZE%"=="3" goto :delete_db
 if "%KEUZE%"=="4" goto :migrate_db
+if "%KEUZE%"=="5" goto :recount
 if "%KEUZE%"=="0" goto :exit
 
 echo.
@@ -75,8 +79,26 @@ echo  Browser will open automatically at http://localhost:3000
 echo  Press Ctrl+C to stop the scanner.
 echo.
 "%PYTHON%" server.py
+
 echo.
 echo  Scanner stopped.
+
+:: Check if migration is needed after server runs
+"%PYTHON%" check_version.py >nul 2>nul
+if %ERRORLEVEL% EQU 1 goto :offer_migrate_after_run
+pause
+goto :menu
+
+:offer_migrate_after_run
+echo.
+echo  ==========================================
+echo   *** DATABASE UPDATE AVAILABLE ***
+echo  ==========================================
+echo.
+"%PYTHON%" check_version.py
+echo.
+set /p MIGRATE=  Migrate now? (y/n):
+if /i "%MIGRATE%"=="y" goto :migrate_db
 pause
 goto :menu
 
@@ -148,40 +170,32 @@ echo  ==========================================
 echo    Migrate database
 echo  ==========================================
 echo.
-echo  This repairs an existing database:
-echo    - Adds IBAN column
+echo  This updates an existing database:
+echo    - Adds IBAN column (if missing)
 echo    - Extracts phone numbers from activity logs
-echo    - Rebuilds indexes
+echo    - Adds filter flag columns (f_notes, f_kvk, f_password, etc.)
+echo    - Adds identity columns (id_number, birthdate, nationality, gender)
+echo    - Rebuilds all indexes (makes filters instant)
 echo.
+"%PYTHON%" migrate_menu.py
+echo.
+pause
+goto :menu
 
-"%PYTHON%" manage.py list
-
-set /p MIG_DB=  Name of the database to migrate (Enter = database.db):
-if "%MIG_DB%"=="" (
-    if not exist "%~dp0database.db" (
-        echo.
-        echo  [ERROR] database.db not found. Import a database first.
-        pause
-        goto :menu
-    )
-    "%PYTHON%" migrate.py
-) else (
-    :: Find the file for this database name
-    "%PYTHON%" -c "import json,sys,pathlib; m=json.loads(pathlib.Path('databases.json').read_text('utf-8')); e=next((x for x in m if x['name']==sys.argv[1]),None); sys.exit(0 if e else 1)" "%MIG_DB%" >nul 2>nul
-    if %ERRORLEVEL% NEQ 0 (
-        echo.
-        echo  [ERROR] Database not found: %MIG_DB%
-        pause
-        goto :menu
-    )
-    for /f "delims=" %%F in ('"%PYTHON%" -c "import json,sys,pathlib; m=json.loads(pathlib.Path('databases.json').read_text('utf-8')); e=next((x for x in m if x['name']==sys.argv[1]),None); print(e['file'] if e else '')" "%MIG_DB%"') do set DB_FILE=%%F
-    if "%DB_FILE%"=="" (
-        echo  [ERROR] File not found for database: %MIG_DB%
-        pause
-        goto :menu
-    )
-    "%PYTHON%" migrate.py "%DB_FILE%"
-)
+:: ── 5. Recount filter statistics ──────────────────────────────────────────
+:recount
+cls
+echo.
+echo  ==========================================
+echo    Recount filter statistics
+echo  ==========================================
+echo.
+echo  Computes and caches filter counts (IBAN, log, summons, etc.)
+echo  so the Overzicht filter badges are instant on next start.
+echo.
+echo  (May take a few minutes for large databases)
+echo.
+"%PYTHON%" recount.py
 echo.
 pause
 goto :menu
